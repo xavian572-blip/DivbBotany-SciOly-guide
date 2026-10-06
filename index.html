@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Botany Field Guide — 20 expeditions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital@0;1&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0e1c13;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(122,155,63,.12),transparent),radial-gradient(rgba(122,155,63,.05) 2px,transparent 2px);background-size:100% 100%,34px 34px;font-family:'EB Garamond',serif;color:#eef3e2;padding:14px;max-width:840px;margin:0 auto}
+h1{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:3.8rem;color:#f2f5e9;text-align:center;line-height:1.1;letter-spacing:1px;text-shadow:0 2px 12px rgba(122,155,63,.35)}
+.sub{text-align:center;color:#a9bfa0;margin-bottom:4px;font-size:1.05rem}
+.topbar{background:#16281d;border:1px solid #3d6b35;outline:1px solid rgba(201,162,39,.45);outline-offset:5px;border-radius:14px;padding:22px;margin:14px 0 8px;text-align:center;box-shadow:0 0 30px rgba(0,0,0,.4)}
+.topbar .tag{display:inline-block;background:#c9a227;color:#0e1c13;border-radius:999px;padding:5px 20px;font-size:1rem;margin-top:8px;letter-spacing:.5px;font-weight:700}
+.vine{display:flex;align-items:center;gap:10px;margin:18px 0 6px;color:#c9a227}
+.vine::before,.vine::after{content:"";flex:1;height:2px;background:rgba(201,162,39,.45);border-radius:2px}
+.vine span{font-size:1.2rem}
+.sec{background:#16281d;border:1px solid #3d6b35;border-radius:14px;padding:20px 22px;margin-bottom:20px;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+.sec h2{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:#f2f5e9;margin-bottom:2px;line-height:1.15}
+.plate{display:inline-block;font-size:.78rem;letter-spacing:2px;color:#c9a227;border:1px solid rgba(201,162,39,.6);border-radius:999px;padding:2px 12px;margin-bottom:8px;line-height:1.5}
+.sec p{margin-bottom:8px;font-size:1.03rem;line-height:1.55;color:#eef3e2}
+.hl-y{background:rgba(242,227,160,.22);color:#f2e3a0;padding:1px 7px;border-radius:12px}
+.hl-p{background:rgba(238,207,216,.22);color:#eecfd8;padding:1px 7px;border-radius:12px}
+.hl-o{background:rgba(240,211,168,.22);color:#f0d3a8;padding:1px 7px;border-radius:12px}
+.hl-b{background:rgba(207,224,245,.22);color:#cfe0f5;padding:1px 7px;border-radius:12px}
+.hl-g{background:rgba(211,232,189,.22);color:#d3e8bd;padding:1px 7px;border-radius:12px}
+.fieldnote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#d8e2c8;border-left:3px solid #c9a227;padding-left:12px;margin:10px 0}
+svg{width:100%;height:auto;display:block}
+#plantWrap{text-align:center}
+#levelBar{display:flex;gap:7px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.lvl{width:36px;height:36px;border-radius:50%;border:2px solid #3d6b35;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.25rem;background:#1e3527;color:#5d7a52}
+.lvl.open{color:#f2f5e9;border-color:#c9a227}
+.lvl.done{background:#c9a227;color:#0e1c13;border-color:#c9a227;font-weight:700}
+.lvl.lock{opacity:.4}
+.locked{opacity:.55;filter:saturate(.5)}
+.quizQ{background:#1e3527;border:1px solid #3d6b35;border-radius:12px;padding:14px;margin-bottom:12px}
+.quizQ h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:#f2f5e9;line-height:1.2;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;font-family:'EB Garamond',serif;font-size:1.08rem;background:#16281d;border:1px solid #3d6b35;border-radius:12px;padding:10px 16px;margin:6px 0;cursor:pointer;color:#eef3e2;line-height:1.4}
+.opt:hover{background:#243b2c;border-color:#7a9b3f}
+.opt.right{background:rgba(122,155,63,.35);border-color:#a5c47a}
+.opt.wrong{background:rgba(150,60,60,.3);border-color:#c96f6a}
+.explain{display:none;margin-top:8px;background:rgba(242,227,160,.14);border-radius:10px;padding:8px 12px;font-size:.98rem;color:#eef3e2}
+button.big{font-family:'EB Garamond',serif;font-weight:700;font-size:1.15rem;padding:10px 30px;border:1px solid #8a6d1c;border-radius:999px;background:#c9a227;color:#0e1c13;cursor:pointer;box-shadow:0 3px 12px rgba(201,162,39,.3);margin:6px;letter-spacing:.5px}
+button.big:active{transform:translate(2px,2px);box-shadow:none}
+button.ghost{background:transparent;color:#c9a227;border:1px solid #c9a227;box-shadow:none}
+.center{text-align:center}
+#score{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#c9a227;text-align:center;margin:8px 0}
+.grow-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.7rem;color:#f2f5e9;text-align:center}
+ul{margin:4px 0 8px 22px;font-size:1.02rem;line-height:1.55;color:#eef3e2}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.sway{animation:sway 3s ease-in-out infinite;transform-origin:bottom center}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.floaty{animation:floaty 2.6s ease-in-out infinite}
+@keyframes buzz{0%,100%{transform:translate(0,0)}25%{transform:translate(6px,-8px)}50%{transform:translate(-4px,-12px)}75%{transform:translate(-8px,-4px)}}
+.buzz{animation:buzz 3s ease-in-out infinite}
+@keyframes glowpulse{0%,100%{opacity:.55}50%{opacity:1}}
+.glowpulse{animation:glowpulse 2.8s ease-in-out infinite}
+@keyframes rise{to{transform:translateY(-110vh);opacity:0}}
+#titleScreen{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 18%,rgba(122,155,63,.2),transparent),#0a140e;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .6s;overflow:hidden}
+#titleScreen.hide{opacity:0;pointer-events:none}
+#particles{position:absolute;inset:0;pointer-events:none}
+#particles span{position:absolute;bottom:-12px;border-radius:50%;background:#c9a227;opacity:.45;animation:rise linear infinite}
+.titleCard{text-align:center;max-width:440px;position:relative;z-index:2}
+.titleSprout{font-size:4.2rem;animation:floaty 3s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(122,155,63,.65))}
+#titleScreen h1{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:4.2rem;color:#f2f5e9;line-height:1;text-shadow:0 2px 24px rgba(201,162,39,.4);margin:8px 0}
+#titleScreen .sub{color:#a9bfa0;font-size:1.1rem}
+#titleScreen .tag{display:inline-block;background:#c9a227;color:#0e1c13;border-radius:999px;padding:5px 20px;font-size:1rem;margin-top:10px;font-weight:700}
+#titleProgress{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#c9a227;margin:16px 0 6px}
+#whoOverlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 18%,rgba(122,155,63,.2),transparent),rgba(6,12,9,.96);padding:20px}
+.whoCard{background:#0e1c13;border:1px solid #c9a227;border-radius:14px;padding:28px 26px;text-align:center;max-width:340px;width:100%;box-shadow:0 0 40px rgba(201,162,39,.15)}
+.whoCard h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;color:#f2f5e9;font-size:2rem;margin:6px 0}
+.whoCard .sub{color:#a9bfa0;font-size:1rem;margin-bottom:14px}
+#whoInput{width:100%;padding:12px;border-radius:10px;border:1px solid #c9a227;background:#0a140e;color:#f2f5e9;font-size:1.1rem;text-align:center;margin-bottom:12px;font-family:'EB Garamond',serif;box-sizing:border-box}
+.whoList{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.whoList button{background:#1a2b1f;color:#c9a227;border:1px solid #c9a227;border-radius:999px;padding:6px 14px;font-size:.95rem;font-family:'EB Garamond',serif;cursor:pointer}
+.whoRow{margin-top:12px;color:#a9bfa0;font-size:.95rem}
+.linkbtn{background:none;border:none;color:#c9a227;text-decoration:underline;font-size:.95rem;font-family:'EB Garamond',serif;cursor:pointer}
+.titleBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+#hud{position:sticky;top:8px;z-index:40;display:flex;align-items:center;gap:10px;background:rgba(14,28,19,.94);border:1px solid #3d6b35;border-radius:999px;padding:8px 16px;margin-bottom:14px;font-size:.95rem;color:#a9bfa0}
+#hudBar{flex:1;height:8px;background:#1e3527;border-radius:99px;overflow:hidden}
+#hudFill{height:100%;width:0;background:linear-gradient(90deg,#7a9b3f,#c9a227);border-radius:99px;transition:width .6s}
+#hudText{color:#c9a227;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;white-space:nowrap}
+/* ---- staged expedition CSS ---- */
+.stages{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.spill{font-size:.72rem;letter-spacing:1px;padding:4px 11px;border-radius:999px;border:1px solid rgba(201,162,39,.45);color:#8fa38a}
+.spill.done{background:#c9a227;border-color:#c9a227;color:#1a1206;font-weight:700}
+.spill.cur{border-color:#e8c84a;color:#e8c84a}
+.spill.lock{opacity:.55}
+.stage-sec{margin-top:12px;border-top:1px dashed rgba(201,162,39,.3);padding-top:12px}
+.stage-sec.locked{opacity:.5}
+.shead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:#e8c84a;margin-bottom:6px}
+.minicard{background:rgba(201,162,39,.06);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:8px 0}
+.minititle{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;color:#e8c84a;margin-bottom:6px}
+.mdots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.mdot{width:9px;height:9px;border-radius:50%;background:rgba(201,162,39,.25)}
+.mdot.on{background:#c9a227}
+.minav{display:flex;gap:8px;justify-content:space-between;margin-top:8px}
+.ytwrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;margin:8px 0;border:1px solid rgba(201,162,39,.35)}
+.ytwrap iframe{position:absolute;inset:0;width:100%;height:100%}
+.wqov{position:absolute;inset:0;background:rgba(8,16,12,.97);z-index:5;display:flex;flex-direction:column;justify-content:center;padding:18px;overflow-y:auto}
+.wqov h4{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.ckrow{display:flex;align-items:center;gap:8px;background:rgba(201,162,39,.05);border:1px solid rgba(201,162,39,.25);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:.9rem;cursor:pointer}
+.ckrow.answered{border-color:#7a9b3f;cursor:default}
+.ckrow .ckmark{font-weight:700;color:#c9a227;min-width:20px}
+.ckrow.answered .ckmark{color:#7a9b3f}
+.ytfallback{background:rgba(201,162,39,.05);border:1px dashed rgba(201,162,39,.4);border-radius:10px;padding:14px;margin:8px 0}
+.qblock{background:rgba(201,162,39,.04);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:10px 0}
+.qblock h5{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.qopts{display:flex;flex-direction:column;gap:7px}
+.qopt{text-align:left;background:rgba(232,200,74,.07);border:1px solid rgba(201,162,39,.35);color:#eef3e2;border-radius:8px;padding:9px 12px;font-size:.95rem;cursor:pointer;font-family:'EB Garamond',serif}
+.qopt.right{background:rgba(122,155,63,.3);border-color:#7a9b3f}
+.qopt.wrong{background:rgba(176,58,46,.3);border-color:#b03a2e}
+.qopt:disabled{cursor:default;opacity:.85}
+.qwhy{margin-top:8px;font-size:.92rem;color:#c9d4bd}
+.statline{font-size:.85rem;color:#8fa38a;letter-spacing:1px}
+.bigbtn{background:#c9a227;color:#1a1206;border:none;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:1rem}
+.ghostbtn{background:transparent;color:#c9a227;border:1px solid #c9a227;border-radius:10px;padding:10px 16px;cursor:pointer}
+
+/* ---- staged expedition CSS ---- */
+.stages{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.spill{font-size:.72rem;letter-spacing:1px;padding:4px 11px;border-radius:999px;border:1px solid rgba(201,162,39,.45);color:#8fa38a}
+.spill.done{background:#c9a227;border-color:#c9a227;color:#1a1206;font-weight:700}
+.spill.cur{border-color:#e8c84a;color:#e8c84a}
+.spill.lock{opacity:.55}
+.stage-sec{margin-top:12px;border-top:1px dashed rgba(201,162,39,.3);padding-top:12px}
+.stage-sec.locked{opacity:.5}
+.shead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:#e8c84a;margin-bottom:6px}
+.minicard{background:rgba(201,162,39,.06);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:8px 0}
+.minititle{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;color:#e8c84a;margin-bottom:6px}
+.mdots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.mdot{width:9px;height:9px;border-radius:50%;background:rgba(201,162,39,.25)}
+.mdot.on{background:#c9a227}
+.minav{display:flex;gap:8px;justify-content:space-between;margin-top:8px}
+.ytwrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;margin:8px 0;border:1px solid rgba(201,162,39,.35)}
+.ytwrap iframe{position:absolute;inset:0;width:100%;height:100%}
+.wqov{position:absolute;inset:0;background:rgba(8,16,12,.97);z-index:5;display:flex;flex-direction:column;justify-content:center;padding:18px;overflow-y:auto}
+.wqov h4{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.ckrow{display:flex;align-items:center;gap:8px;background:rgba(201,162,39,.05);border:1px solid rgba(201,162,39,.25);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:.9rem;cursor:pointer}
+.ckrow.answered{border-color:#7a9b3f;cursor:default}
+.ckrow .ckmark{font-weight:700;color:#c9a227;min-width:20px}
+.ckrow.answered .ckmark{color:#7a9b3f}
+.ytfallback{background:rgba(201,162,39,.05);border:1px dashed rgba(201,162,39,.4);border-radius:10px;padding:14px;margin:8px 0}
+.qblock{background:rgba(201,162,39,.04);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:10px 0}
+.qblock h5{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.qopts{display:flex;flex-direction:column;gap:7px}
+.qopt{text-align:left;background:rgba(232,200,74,.07);border:1px solid rgba(201,162,39,.35);color:#eef3e2;border-radius:8px;padding:9px 12px;font-size:.95rem;cursor:pointer;font-family:'EB Garamond',serif}
+.qopt.right{background:rgba(122,155,63,.3);border-color:#7a9b3f}
+.qopt.wrong{background:rgba(176,58,46,.3);border-color:#b03a2e}
+.qopt:disabled{cursor:default;opacity:.85}
+.qwhy{margin-top:8px;font-size:.92rem;color:#c9d4bd}
+.statline{font-size:.85rem;color:#8fa38a;letter-spacing:1px}
+.bigbtn{background:#c9a227;color:#1a1206;border:none;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:1rem}
+.ghostbtn{background:transparent;color:#c9a227;border:1px solid #c9a227;border-radius:10px;padding:10px 16px;cursor:pointer}
+.tbar{width:220px;height:8px;border:1px solid rgba(201,162,39,.6);border-radius:99px;margin:0 auto 14px;overflow:hidden}
+#tfill{height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#e8c84a);transition:width .8s}
+
+/* ---- staged expedition CSS ---- */
+.stages{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.spill{font-size:.72rem;letter-spacing:1px;padding:4px 11px;border-radius:999px;border:1px solid rgba(201,162,39,.45);color:#8fa38a}
+.spill.done{background:#c9a227;border-color:#c9a227;color:#1a1206;font-weight:700}
+.spill.cur{border-color:#e8c84a;color:#e8c84a}
+.spill.lock{opacity:.55}
+.stage-sec{margin-top:12px;border-top:1px dashed rgba(201,162,39,.3);padding-top:12px}
+.stage-sec.locked{opacity:.5}
+.shead{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:#e8c84a;margin-bottom:6px}
+.minicard{background:rgba(201,162,39,.06);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:8px 0}
+.minititle{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.1rem;color:#e8c84a;margin-bottom:6px}
+.mdots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.mdot{width:9px;height:9px;border-radius:50%;background:rgba(201,162,39,.25)}
+.mdot.on{background:#c9a227}
+.minav{display:flex;gap:8px;justify-content:space-between;margin-top:8px}
+.ytwrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;margin:8px 0;border:1px solid rgba(201,162,39,.35)}
+.ytwrap iframe{position:absolute;inset:0;width:100%;height:100%}
+.wqov{position:absolute;inset:0;background:rgba(8,16,12,.97);z-index:5;display:flex;flex-direction:column;justify-content:center;padding:18px;overflow-y:auto}
+.wqov h4{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.ckrow{display:flex;align-items:center;gap:8px;background:rgba(201,162,39,.05);border:1px solid rgba(201,162,39,.25);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:.9rem;cursor:pointer}
+.ckrow.answered{border-color:#7a9b3f;cursor:default}
+.ckrow .ckmark{font-weight:700;color:#c9a227;min-width:20px}
+.ckrow.answered .ckmark{color:#7a9b3f}
+.ytfallback{background:rgba(201,162,39,.05);border:1px dashed rgba(201,162,39,.4);border-radius:10px;padding:14px;margin:8px 0}
+.qblock{background:rgba(201,162,39,.04);border:1px solid rgba(201,162,39,.25);border-radius:10px;padding:12px;margin:10px 0}
+.qblock h5{font-family:'Cormorant Garamond',serif;font-style:italic;color:#e8c84a;margin:0 0 8px;font-size:1.15rem}
+.qopts{display:flex;flex-direction:column;gap:7px}
+.qopt{text-align:left;background:rgba(232,200,74,.07);border:1px solid rgba(201,162,39,.35);color:#eef3e2;border-radius:8px;padding:9px 12px;font-size:.95rem;cursor:pointer;font-family:'EB Garamond',serif}
+.qopt.right{background:rgba(122,155,63,.3);border-color:#7a9b3f}
+.qopt.wrong{background:rgba(176,58,46,.3);border-color:#b03a2e}
+.qopt:disabled{cursor:default;opacity:.85}
+.qwhy{margin-top:8px;font-size:.92rem;color:#c9d4bd}
+.statline{font-size:.85rem;color:#8fa38a;letter-spacing:1px}
+.bigbtn{background:#c9a227;color:#1a1206;border:none;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:1rem}
+.ghostbtn{background:transparent;color:#c9a227;border:1px solid #c9a227;border-radius:10px;padding:10px 16px;cursor:pointer}
+.tbar{width:220px;height:8px;border:1px solid rgba(201,162,39,.6);border-radius:99px;margin:0 auto 14px;overflow:hidden}
+#tfill{height:100%;width:0;background:linear-gradient(90deg,#8a6d1c,#e8c84a);transition:width .8s}
+
+</style></head><body>
+
+<div id="titleScreen">
+<div id="particles"></div>
+<div class="titleCard">
+<div class="titleSprout">🌱</div>
+<h1>Botany<br>Field Guide</h1>
+<div class="sub">by Xavian · Division B</div>
+<div class="tag">20 expeditions · the sheet + research depth</div>
+<div id="titleProgress">Garden growth: 0 / 20 expeditions cleared</div><div class="tbar"><div id="tfill"></div></div><div class="tbar"><div id="tfill"></div></div>
+<div class="titleBtns">
+<button class="big" id="beginBtn">▶ Begin</button>
+<button class="big ghost" id="gardenBtn">🌱 My garden</button>
+</div>
+<div class="whoRow">🌿 <span id="whoName"></span> <button class="linkbtn" id="switchPlayer">not you? switch</button></div>
+</div>
+</div>
+
+<div id="whoOverlay" style="display:none">
+<div class="whoCard">
+<div class="titleSprout">🌿</div>
+<h2>Who is exploring?</h2>
+<div class="sub">Everyone gets their own garden.<br>Type your name to start or continue yours.</div>
+<input id="whoInput" maxlength="24" placeholder="Your first name" autocomplete="off">
+<button class="big" id="whoGo">▶ Start my garden</button>
+<div id="whoList" class="whoList"></div>
+</div>
+</div>
+
+<div id="hud"><span>❧ Field Guide</span><div id="hudBar"><div id="hudFill"></div></div><span id="hudText">0/20</span></div>
+
+<div class="topbar">
+<h1>🌱 Botany Field Guide</h1>
+<div class="sub">by Xavian · Division B · built from your event sheet</div>
+<div class="tag">20 expeditions · the sheet + research depth · learn → watch → quiz → garden grows</div>
+</div>
+
+<div class="vine"><span>❧</span></div>
+<div class="sec">
+<h2>The living collection</h2>
+<div id="plantWrap">
+<svg viewBox="0 0 300 260" id="plantSvg">
+<ellipse cx="150" cy="230" rx="60" ry="14" fill="#000" opacity=".35"/>
+<g id="stage0"><ellipse cx="150" cy="215" rx="18" ry="13" fill="#8a6f4d" stroke="#5d4037" stroke-width="3"/><text x="150" y="258" text-anchor="middle" font-size="15" font-family="EB Garamond, serif" fill="#eef3e2">a seed… for now</text></g>
+<g id="stage1" style="display:none"><rect x="146" y="150" width="8" height="70" fill="#3d6b35"/><ellipse cx="150" cy="140" rx="24" ry="14" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(-25 150 140)"/><ellipse cx="150" cy="140" rx="24" ry="14" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(25 150 140)"/><ellipse cx="150" cy="222" rx="18" ry="11" fill="#8a6f4d" stroke="#5d4037" stroke-width="2"/></g>
+<g id="stage2" style="display:none" class="sway"><rect x="145" y="90" width="10" height="135" fill="#3d6b35"/><ellipse cx="150" cy="120" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(-30 150 120)"/><ellipse cx="150" cy="150" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(30 150 150)"/><ellipse cx="150" cy="80" rx="34" ry="20" fill="#a5c47a" stroke="#7a9b3f" stroke-width="2"/></g>
+<g id="stage3" style="display:none" class="sway"><rect x="145" y="100" width="10" height="125" fill="#3d6b35"/><ellipse cx="150" cy="150" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(-30 150 150)"/><ellipse cx="150" cy="180" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(30 150 180)"/><circle cx="150" cy="88" r="14" fill="#e8b4c4" stroke="#c98aa0" stroke-width="3"/><circle cx="150" cy="88" r="5" fill="#f2e3a0" stroke="#c98aa0" stroke-width="2"/></g>
+<g id="stage4" style="display:none" class="sway"><rect x="145" y="100" width="10" height="125" fill="#3d6b35"/><ellipse cx="150" cy="160" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(-30 150 160)"/><ellipse cx="150" cy="190" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(30 150 190)"/><g class="floaty"><circle cx="150" cy="70" r="12" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2"/><circle cx="132" cy="82" r="12" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2"/><circle cx="168" cy="82" r="12" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2"/><circle cx="138" cy="98" r="12" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2"/><circle cx="162" cy="98" r="12" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2"/><circle cx="150" cy="85" r="9" fill="#f2e3a0" stroke="#c9a227" stroke-width="2"/></g></g>
+<g id="stage5" style="display:none" class="sway"><rect x="145" y="100" width="10" height="125" fill="#3d6b35"/><ellipse cx="150" cy="160" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(-30 150 160)"/><ellipse cx="150" cy="190" rx="38" ry="22" fill="#7a9b3f" stroke="#a5c47a" stroke-width="2" transform="rotate(30 150 190)"/><circle cx="150" cy="85" r="22" fill="#c96f4a" stroke="#e08a5a" stroke-width="3"/><rect x="144" y="60" width="12" height="10" fill="#3d6b35"/><text x="150" y="40" text-anchor="middle" font-size="18" font-family="Cormorant Garamond, serif" fill="#c9a227">full grown! 🌻</text></g>
+<g id="ex6" style="display:none" class="buzz"><ellipse cx="62" cy="66" rx="10" ry="7" fill="#f2c14e" stroke="#8a6d1c" stroke-width="2"/><line x1="58" y1="60" x2="58" y2="72" stroke="#8a6d1c" stroke-width="2"/><line x1="64" y1="60" x2="64" y2="72" stroke="#8a6d1c" stroke-width="2"/><ellipse cx="56" cy="56" rx="7" ry="4" fill="#fff" opacity=".75" transform="rotate(-25 56 56)"/><ellipse cx="68" cy="56" rx="7" ry="4" fill="#fff" opacity=".75" transform="rotate(25 68 56)"/></g>
+<g id="ex7" style="display:none" class="floaty"><ellipse cx="232" cy="66" rx="9" ry="13" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2" transform="rotate(-28 232 66)"/><ellipse cx="250" cy="66" rx="9" ry="13" fill="#e8b4c4" stroke="#c98aa0" stroke-width="2" transform="rotate(28 250 66)"/><rect x="239" y="56" width="4" height="22" rx="2" fill="#a9bfa0"/></g>
+<g id="ex8" style="display:none"><rect x="52" y="196" width="5" height="30" fill="#3d6b35"/><circle cx="54" cy="182" r="7" fill="#cfe0f5" stroke="#7fa8c9" stroke-width="2"/><circle cx="42" cy="190" r="7" fill="#cfe0f5" stroke="#7fa8c9" stroke-width="2"/><circle cx="66" cy="190" r="7" fill="#cfe0f5" stroke="#7fa8c9" stroke-width="2"/><circle cx="47" cy="200" r="7" fill="#cfe0f5" stroke="#7fa8c9" stroke-width="2"/><circle cx="61" cy="200" r="7" fill="#cfe0f5" stroke="#7fa8c9" stroke-width="2"/><circle cx="54" cy="192" r="5" fill="#f2e3a0" stroke="#c9a227" stroke-width="2"/></g>
+<g id="ex9" style="display:none"><circle cx="106" cy="148" r="10" fill="#c96f4a" stroke="#e08a5a" stroke-width="2"/><circle cx="194" cy="148" r="10" fill="#c96f4a" stroke="#e08a5a" stroke-width="2"/></g>
+<g id="ex10" style="display:none"><rect x="222" y="206" width="10" height="18" rx="4" fill="#d8cfae" stroke="#8a7a63" stroke-width="2"/><ellipse cx="227" cy="204" rx="17" ry="11" fill="#c96f4a" stroke="#e08a5a" stroke-width="2"/><circle cx="221" cy="200" r="2.5" fill="#fff"/><circle cx="231" cy="203" r="2.5" fill="#fff"/><circle cx="227" cy="197" r="2" fill="#fff"/></g>
+<g id="ex11" style="display:none" class="glowpulse"><circle cx="150" cy="130" r="100" fill="none" stroke="#c9a227" stroke-width="3" stroke-dasharray="8 8" opacity=".8"/><polygon points="150,8 154,18 165,18 156,25 159,36 150,29 141,36 144,25 135,18 146,18" fill="#c9a227"/><polygon points="40,110 43,117 51,117 45,122 47,130 40,125 33,130 35,122 29,117 37,117" fill="#c9a227"/><polygon points="260,110 263,117 271,117 265,122 267,130 260,125 253,130 255,122 249,117 257,117" fill="#c9a227"/></g>
+<g id="ex12" style="display:none" class="floaty"><circle cx="258" cy="34" r="15" fill="#f2c14e" stroke="#c9a227" stroke-width="2"/><g stroke="#c9a227" stroke-width="2"><line x1="258" y1="10" x2="258" y2="4"/><line x1="258" y1="58" x2="258" y2="64"/><line x1="234" y1="34" x2="228" y2="34"/><line x1="282" y1="34" x2="288" y2="34"/><line x1="241" y1="17" x2="237" y2="13"/><line x1="275" y1="51" x2="279" y2="55"/><line x1="275" y1="17" x2="279" y2="13"/><line x1="241" y1="51" x2="237" y2="55"/></g></g>
+<g id="ex13" style="display:none"><ellipse cx="38" cy="36" rx="18" ry="11" fill="#eef3e2" opacity=".85"/><ellipse cx="52" cy="32" rx="14" ry="10" fill="#eef3e2" opacity=".85"/><ellipse cx="26" cy="32" rx="11" ry="8" fill="#eef3e2" opacity=".85"/><g stroke="#7fa8c9" stroke-width="2"><line x1="30" y1="48" x2="27" y2="58"/><line x1="42" y1="48" x2="39" y2="58"/><line x1="54" y1="48" x2="51" y2="58"/></g></g>
+<g id="ex14" style="display:none"><rect x="93" y="206" width="4" height="22" fill="#3d6b35"/><ellipse cx="95" cy="200" rx="10" ry="6" fill="#7a9b3f" stroke="#a5c47a" stroke-width="1.5" transform="rotate(-25 95 200)"/><ellipse cx="95" cy="200" rx="10" ry="6" fill="#7a9b3f" stroke="#a5c47a" stroke-width="1.5" transform="rotate(25 95 200)"/></g>
+<g id="ex15" style="display:none"><rect x="93" y="196" width="4" height="12" fill="#3d6b35"/><circle cx="95" cy="186" r="6" fill="#e8b4c4" stroke="#c98aa0" stroke-width="1.5"/><circle cx="87" cy="191" r="6" fill="#e8b4c4" stroke="#c98aa0" stroke-width="1.5"/><circle cx="103" cy="191" r="6" fill="#e8b4c4" stroke="#c98aa0" stroke-width="1.5"/><circle cx="95" cy="191" r="4" fill="#f2e3a0" stroke="#c9a227" stroke-width="1.5"/></g>
+<g id="ex16" style="display:none" class="floaty"><ellipse cx="150" cy="18" rx="11" ry="7" fill="#7fa8c9" stroke="#3d6b8a" stroke-width="2"/><circle cx="160" cy="14" r="6" fill="#7fa8c9" stroke="#3d6b8a" stroke-width="2"/><polygon points="166,14 172,16 166,18" fill="#c9a227"/><ellipse cx="148" cy="12" rx="8" ry="4" fill="#a9c6de" stroke="#3d6b8a" stroke-width="1.5" transform="rotate(-20 148 12)"/></g>
+<g id="ex17" style="display:none"><circle cx="186" cy="170" r="7" fill="#b03a2e" stroke="#7d241c" stroke-width="2"/><line x1="186" y1="163" x2="186" y2="177" stroke="#2c1a12" stroke-width="1.5"/><circle cx="183" cy="168" r="1.5" fill="#2c1a12"/><circle cx="189" cy="172" r="1.5" fill="#2c1a12"/><circle cx="183" cy="173" r="1.2" fill="#2c1a12"/></g>
+<g id="ex18" style="display:none"><rect x="66" y="210" width="8" height="14" rx="3" fill="#d8cfae" stroke="#8a7a63" stroke-width="1.5"/><ellipse cx="70" cy="208" rx="13" ry="9" fill="#c96f4a" stroke="#e08a5a" stroke-width="2"/><circle cx="66" cy="206" r="2" fill="#fff"/><circle cx="74" cy="208" r="2" fill="#fff"/></g>
+<g id="ex19" style="display:none" class="glowpulse"><ellipse cx="150" cy="130" rx="120" ry="112" fill="none" stroke="#c9a227" stroke-width="2" stroke-dasharray="4 8" opacity=".7"/></g>
+</svg>
+</div>
+<div class="grow-note" id="growNote">finish Expedition 1 to sprout 🌱</div>
+<div id="levelBar"></div>
+<div class="center"><button class="big ghost" id="resetBtn" style="font-size:.95rem;padding:6px 18px">↺ start over</button></div>
+</div>
+
+<div id="levels"></div>
+
+<script>
+const LEVELS=[{"id": 1, "title": "Know the rules of the game", "sheet": "EVENT PARAMETERS + SCORING", "yt": null, "ytTitle": "", "minis": [["The setup", "<b>Team:</b> up to 2 people. <b>Time:</b> about 50 minutes. <b>Format:</b> paper-and-pencil test <i>or</i> a station test — you rotate between tables. <b>Supervisors provide</b> specimens, pictures, data tables, graphs, microscopes, and slides. Anything toxic or irritating comes sealed in closed, non-breakable containers — you never handle it open."], ["Your cheat sheet", "You get <span class='hl-g'>ONE 8.5×11 sheet, both sides</span>, any source — handwritten or printed, laminated or slipped in a sheet protector. Two hard rules: <span class='hl-o'>affixed labels are prohibited</span> and <span class='hl-o'>multiple sheets are prohibited</span> (even tucked into one protector). One sheet means one sheet."], ["Scoring + gear", "<span class='hl-b'>High score wins.</span> Ties are broken by <span class='hl-b'>pre-selected tiebreaker questions</span> — so every question counts, even the ones that feel easy. Each team may bring <span class='hl-g'>two Class II calculators</span> and writing utensils. Eye protection and other policies live in the General Rules on soinc.org — read them before competition day."]], "wq": [["How many cheat sheets can your team bring into Botany?", ["One 8.5×11 sheet, both sides", "Two sheets, one side each", "As many as fit in a protector", "None — memory only"], 0, "The sheet says ONE sheet, both sides. Multiple sheets are prohibited."], ["How are ties broken in Botany?", ["Pre-selected tiebreaker questions", "A coin flip", "Extra time", "Sudden-death oral round"], 0, "High score wins, and pre-selected questions break ties."]], "qs": [["How many people can be on a Botany team?", ["Up to 2", "Exactly 2", "Up to 4", "Solo only"], 0, "The sheet says A TEAM OF UP TO: 2."], ["About how long is the event?", ["50 minutes", "30 minutes", "2 hours", "90 minutes"], 0, "Approximate time: 50 minutes."], ["What calculators may each team bring?", ["Two Class II calculators", "Any calculator", "A laptop", "Textbooks"], 0, "Two Class II calculators — that's the sheet's exact wording."], ["The cheat sheet rules are…", ["One 8.5×11 sheet, both sides, laminated or in a protector", "As many sheets as you want", "One sheet, one side only", "No cheat sheet allowed"], 0, "One (1) sheet, both sides, any source. Laminated or in a sheet protector."], ["Which of these is prohibited?", ["Affixed labels and multiple sheets", "Laminating your sheet", "Using both sides", "Writing utensils"], 0, "Orange highlight = danger: affixed labels and multiple sheets are prohibited."], ["How is Botany scored?", ["High score wins, pre-selected questions break ties", "Low score wins", "Fastest finish wins", "Everyone gets participation points"], 0, "Blue highlight = scoring: high score wins, ties broken by pre-selected questions."]]}, {"id": 2, "title": "Inside a plant cell", "sheet": "THE COMPETITION 3b — plant cells", "yt": "XYskucS1acY", "ytTitle": "Plant Cell Explained — cell wall, vacuole & chloroplasts", "minis": [["The three plant-only parts", "<b>Cell wall</b> — a rigid layer of cellulose outside the membrane; it gives the cell its shape and support. <b>Chloroplasts</b> — green discs holding chlorophyll; this is where photosynthesis happens. <b>Large central vacuole</b> — a giant water-filled sac that keeps the cell firm (turgor). Animal cells have none of these three."], ["The control room", "<b>Nucleus</b> — holds the DNA, the instruction manual that runs the cell. <b>Cell membrane</b> — the thin gatekeeper just inside the wall; it decides what enters and leaves. <b>Cytoplasm</b> — the jelly-like fluid where most chemical reactions happen and organelles float."], ["Wall vs. membrane — don't mix them", "The <b>wall</b> is about <i>strength</i>: rigid, made of cellulose, keeps the plant upright. The <b>membrane</b> is about <i>traffic</i>: flexible, controls what passes in and out. Test writers love asking which one does which — wall = support, membrane = transport control."]], "wq": [["Which set is found in plant cells but NOT in animal cells?", ["Cell wall, chloroplasts, large central vacuole", "Nucleus, mitochondria, ribosomes", "Cell membrane, cytoplasm, DNA", "Chloroplasts, lysosomes, centrioles"], 0, "Those three — wall, chloroplasts, big vacuole — are the classic plant-only structures."], ["Chlorophyll, the pigment that traps light, sits inside the…", ["chloroplast", "central vacuole", "cell wall", "nucleus"], 0, "Chloroplasts hold the chlorophyll in their membranes."]], "qs": [["Photosynthesis happens in the…", ["chloroplast", "nucleus", "cell wall", "vacuole"], 0, "Chloroplasts hold the chlorophyll that traps light."], ["The rigid outer layer of a plant cell is the…", ["cell wall", "cell membrane", "nucleus", "cytoplasm"], 0, "The wall gives support; the membrane is just inside it."], ["The large central vacuole mainly stores…", ["water", "DNA", "chlorophyll", "sugar"], 0, "Water storage — it also keeps the cell firm (turgor)."], ["Which set is found in plant cells but NOT animal cells?", ["Cell wall, chloroplasts, large central vacuole", "Nucleus, mitochondria, membrane", "Ribosomes, DNA, cytoplasm", "Vacuole, nucleus, wall"], 0, "Those three are the classic plant-only structures."], ["The nucleus…", ["holds DNA and controls the cell", "traps sunlight", "stores water", "makes the wall rigid"], 0, "The control center with the genetic instructions."], ["Chlorophyll is found inside the…", ["chloroplast", "vacuole", "cell wall", "nucleus"], 0, "Chlorophyll sits in the chloroplast's membranes."]]}, {"id": 3, "title": "Photosynthesis", "sheet": "THE COMPETITION 3d-iii", "yt": "scWoQJ5pQB0", "ytTitle": "How does photosynthesis occur?", "minis": [["The equation that runs the planet", "<b>6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂</b><br>Carbon dioxide + water + sunlight → glucose (food) + oxygen. The plant keeps the glucose and releases the oxygen — the oxygen you're breathing right now is plant exhaust."], ["Where it happens", "Inside the <b>chloroplast</b>, using the green pigment <b>chlorophyll</b>. Chlorophyll absorbs red and blue light and <i>reflects</i> green — that's why leaves look green. No chlorophyll, no photosynthesis."], ["The two stages", "<b>Light reactions</b> (thylakoid membranes) — split water, release O₂, and make energy carriers (ATP, NADPH). <b>Calvin cycle</b> (stroma) — uses that energy to build glucose from CO₂. Light stage first, sugar-building second."]], "wq": [["In the video, the light reactions take place in the…", ["thylakoid membranes", "stroma", "cytoplasm", "mitochondria"], 0, "Light reactions run on the thylakoid membranes; the Calvin cycle runs in the stroma."], ["What does the plant do with the glucose it makes?", ["Uses it as food (and stores extra as starch)", "Breathes it out", "Pumps it into the soil", "Turns it into chlorophyll"], 0, "Glucose is the plant's food — burned for energy or stored as starch."]], "qs": [["Which is the correct photosynthesis equation?", ["6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂", "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O", "6O₂ + 6H₂O → C₆H₁₂O₆ + 6CO₂", "CO₂ + H₂O → O₂ + sugar (unbalanced)"], 0, "Count the atoms: 6 carbon dioxide + 6 water → 1 glucose + 6 oxygen."], ["What does a plant make in photosynthesis?", ["Glucose and oxygen", "Protein and water", "Carbon dioxide", "Sunlight"], 0, "Glucose is the food; oxygen is released."], ["What does chlorophyll do?", ["Traps light energy", "Absorbs water", "Makes seeds", "Carries sugar"], 0, "The green pigment that catches sunlight."], ["What gas does a plant take in?", ["Carbon dioxide", "Oxygen", "Nitrogen", "Helium"], 0, "CO₂ in through stomata; O₂ out."], ["Why are leaves green?", ["Chlorophyll reflects green light", "They absorb green best", "Green repels insects", "The stem dyes them"], 0, "Chlorophyll absorbs red and blue, reflects green."], ["Where does photosynthesis happen?", ["In the chloroplast", "In the mitochondria", "In the nucleus", "In the cell wall"], 0, "Chloroplasts hold the chlorophyll."]]}, {"id": 4, "title": "Roots, stems, leaves & spores", "sheet": "THE COMPETITION 3b — growth & differentiation", "yt": "F1KhtFnfDSg", "ytTitle": "Plant Root System & Shoot System", "minis": [["Roots — the underground crew", "Jobs: <b>anchor</b> the plant, <b>absorb</b> water and minerals, <b>store</b> extra food (think carrots). Two designs: <b>tap roots</b> (one big root diving deep, like a carrot) and <b>fibrous roots</b> (a shallow spreading network, like grass). Root hairs do most of the absorbing."], ["Stems — the highway", "Jobs: <b>support</b> the plant and <b>connect</b> roots to leaves, carrying water up and sugar every direction. Key landmarks: <b>nodes</b> (where leaves attach) and <b>internodes</b> (the stretches between). New growth happens at <b>meristems</b> — clusters of dividing cells at tips."], ["Leaves + spore bodies", "Leaves are the <b>food factories</b> (photosynthesis) with pores called <b>stomata</b> for gas exchange. <b>Differentiation</b> = young unspecialized cells becoming specialized for one job. And the dots under a fern frond? Those are <b>sori</b> — clusters of <b>sporangia</b>, the spore-forming bodies."]], "wq": [["Which root type is a shallow, spreading network?", ["Fibrous roots", "Tap roots", "Prop roots", "Aerial roots"], 0, "Fibrous roots spread shallow and wide (grasses); tap roots dive deep (carrots)."], ["New growth in plants happens at the…", ["meristems", "nodes", "cuticle", "petioles"], 0, "Meristems are the dividing-cell zones at root and shoot tips."]], "qs": [["New plant growth happens at the…", ["meristems", "stomata", "sori", "cuticle"], 0, "Meristems at root and shoot tips make all new cells."], ["Differentiation means…", ["cells becoming specialized for jobs", "cells dividing forever", "seeds sprouting", "leaves falling"], 0, "One new cell becomes root, another becomes leaf — specialization."], ["Spores are made inside…", ["spore-forming bodies (sporangia)", "flowers", "roots", "seeds"], 0, "Sporangia make spores — e.g., sori under fern fronds."], ["The dots under a fern frond are called…", ["sori", "stomata", "ovules", "lenticels"], 0, "Sori are clusters of spore-forming bodies. Flip a frond and look."], ["Which part absorbs water and minerals?", ["Roots", "Leaves", "Flowers", "Stems"], 0, "Roots drink and anchor; root hairs boost absorption."], ["Stomata are…", ["tiny pores for gas exchange, mostly under leaves", "root hairs", "flower petals", "seed coats"], 0, "CO₂ in, water vapor and O₂ out."]]}, {"id": 5, "title": "Moving & storing supplies", "sheet": "THE COMPETITION 3b — transport & storage", "yt": "jtuX7H05tmQ", "ytTitle": "Xylem and Phloem — Transport in Plants (FuseSchool)", "minis": [["Xylem — the water elevator", "<b>Xylem</b> moves water + dissolved minerals <b>up only</b>, roots → leaves. It's made of dead, hollow, straw-like cells strengthened with lignin. The pull comes from <b>transpiration</b> — water evaporating from leaves tugs the whole column upward."], ["Phloem — the food delivery network", "<b>Phloem</b> moves <b>sugar</b> (and amino acids) from where it's made (sources, usually leaves) to where it's needed (sinks: roots, fruits, growing tips) — <b>up or down</b>. It's living tissue, and the flow is called <b>translocation</b>."], ["Storage: the pantry", "Plants store extra glucose as <b>starch</b> — in roots, seeds, and stems. A potato is literally an <b>underground stem</b> packed with starch. Starch is just glucose molecules chained together for later."]], "wq": [["Xylem tissue is made of…", ["dead, hollow cells", "living sugar-carrying cells", "green photosynthetic cells", "dividing meristem cells"], 0, "Xylem cells are dead and hollow — tiny straws strengthened with lignin."], ["Phloem moves sugar from sources to sinks. A 'sink' could be…", ["roots storing starch", "a mature leaf in full sun", "the atmosphere", "a dead branch"], 0, "Sinks use or store sugar: roots, fruits, seeds, growing tips. Leaves are sources."]], "qs": [["Xylem moves water…", ["up only, roots to leaves", "down only", "both directions", "sideways"], 0, "Xylem is one-way up. Phloem is the two-way one."], ["Phloem mainly transports…", ["sugar to wherever the plant needs it", "water from roots", "oxygen to leaves", "minerals from soil"], 0, "Phloem = phood. Sugar moves both up and down."], ["Plants store extra glucose as…", ["starch", "protein", "chlorophyll", "cellulose"], 0, "Starch in tubers, roots, and seeds — the plant's pantry."], ["A potato is…", ["an underground stem storing starch", "a root", "a fruit", "a seed"], 0, "Tubers are swollen underground stems packed with starch."], ["Gases enter and leave the leaf through the…", ["stomata", "xylem", "root hairs", "cuticle"], 0, "CO₂ in for photosynthesis, O₂ and water vapor out."], ["Transpiration is…", ["water evaporating from leaves, pulling more water up", "sugar moving through phloem", "pollen traveling in wind", "seeds sleeping"], 0, "Evaporation at the top pulls the water column up the xylem."]]}, {"id": 6, "title": "The big plant divisions", "sheet": "THE COMPETITION 3c", "yt": "0AlO9Gp5NIE", "ytTitle": "Monocot vs Dicot — stem & root (OLabs)", "minis": [["Pair 1: algae vs multicellular plants", "<b>Algae</b> are the simple ones — no true roots, stems, or leaves, and they live in water. <b>Multicellular land plants</b> evolved true organs (roots, stems, leaves) plus vascular plumbing. If it has no true organs, think algae."], ["Pair 2: monocot vs dicot", "<b>Monocots</b> (grasses, lilies, corn): flower parts in <b>3s</b>, parallel leaf veins, scattered stem bundles, fibrous roots. <b>Dicots</b> (roses, oaks, beans): flower parts in <b>4s/5s</b>, net-like branching veins, ring of stem bundles, tap roots. The video's stem cross-sections show this beautifully."], ["Pairs 3 & 4: embryos and wood", "<b>Embryophytes</b> = land plants that protect the embryo (mosses up through flowering plants). <b>Cryptogams</b> = the spore-reproducers (algae, mosses, ferns) — 'hidden reproduction'. <b>Woody</b> plants make wood (trees, shrubs); <b>herbaceous</b> plants stay soft and green (most wildflowers, grasses)."]], "wq": [["A flower with petals in multiples of 3 is most likely a…", ["monocot", "dicot", "moss", "fern"], 0, "Monocots do 3s; dicots do 4s and 5s."], ["In a monocot stem, the vascular bundles are…", ["scattered", "in a neat ring", "only in the roots", "absent"], 0, "Scattered in monocots, in a ring in dicots — exactly what the video's cross-sections show."]], "qs": [["Cryptogams reproduce using…", ["spores", "seeds", "flowers", "fruit"], 0, "Crypto = hidden: no flowers or seeds, just spores."], ["Embryophytes are…", ["land plants that protect the embryo", "water plants with no roots", "plants that eat insects", "single-celled algae"], 0, "Embryo protection was the big move onto land."], ["Monocot flower parts come in…", ["3s", "4s", "5s", "7s"], 0, "3s = monocot. 4s/5s = dicot."], ["A dicot leaf has…", ["net-like, branching veins", "parallel veins", "no veins", "circular veins"], 0, "Parallel = monocot like grass. Net-like = dicot."], ["Woody plants…", ["make wood — trees and shrubs", "stay soft and green", "have no roots", "can't photosynthesize"], 0, "Wood = xylem built up year after year."], ["Algae lack…", ["true roots, stems, and leaves", "chlorophyll", "the ability to photosynthesize", "cells"], 0, "Algae photosynthesize fine — they just never evolved true organs."]]}, {"id": 7, "title": "Groups through time & fossils", "sheet": "THE COMPETITION 3d-iv, v", "yt": "KVaAoRuh2oA", "ytTitle": "How Plants Conquered the Land", "minis": [["From water to land", "Plants began as <b>green algae</b> in the water. The first land pioneers were the <b>bryophytes</b> (mosses, liverworts, hornworts) — small, no vascular tissue, and their sperm still had to <i>swim</i>, so they hugged damp ground. They were the amphibians of the plant kingdom."], ["The vascular breakthrough", "Then came the game-changer: <b>vascular tissue</b> (xylem + phloem). The <b>pteridophytes</b> — ferns and horsetails — were the first plants with true roots, stems, and leaves, and they could grow tall. Later, <b>seeds</b> freed plants from needing water for reproduction, and <b>flowers</b> turned animals into pollinators."], ["Paleobotany — reading the fossils", "<b>Paleobotany</b> is the study of fossil plants. Fossils like <i>Cooksonia</i> (one of the earliest land plants) and giant Carboniferous ferns tell us the order: algae → mosses → ferns → gymnosperms → angiosperms. Each step added protection for reproduction — the story of the video."]], "wq": [["Why were bryophytes stuck in damp places?", ["Their sperm had to swim through water", "They had no chlorophyll", "They were eaten by dinosaurs", "They needed salt water"], 0, "No vascular tissue and swimming sperm kept mosses tied to wet habitats."], ["Which innovation let the first plants grow tall?", ["Vascular tissue (xylem + phloem)", "Flowers", "Seeds", "Fruits"], 0, "Vascular plumbing moved water up, so plants could finally grow tall."]], "qs": [["Paleobotany is the study of…", ["fossil plants", "living flowers only", "plant diseases", "algae in aquariums"], 0, "Paleo = ancient. Fossils tell the evolution story."], ["Gymnosperms have…", ["naked seeds in cones, no flowers", "flowers and fruit", "spores under leaves", "no vascular tissue"], 0, "'Gymno' = naked. Cones, not flowers."], ["Which came first: ferns or flowering plants?", ["Ferns", "Flowering plants", "They appeared together", "Grasses"], 0, "Ferns are ancient; flowers are the newest big innovation."], ["Seeds were a huge advantage because they…", ["protect and nourish the embryo", "are lighter than spores", "need no water at all", "grow faster than spores"], 0, "A seed is a baby plant with a packed lunch and a raincoat."], ["Angiosperms dominate today mainly because…", ["flowers made animal pollination efficient", "they grow the tallest", "they need the least water", "they make cones"], 0, "Flowers + pollinators = fast, targeted reproduction."], ["The order algae → mosses → ferns → gymnosperms → angiosperms shows…", ["increasing protection for reproduction", "decreasing size", "loss of photosynthesis", "fewer species over time"], 0, "Each step guarded the next generation better."]]}, {"id": 8, "title": "Reproduction & genetics", "sheet": "THE COMPETITION 3d-ii", "yt": "4nDHlw-Voy4", "ytTitle": "Pollination and Fertilisation in Plants (KS3)", "minis": [["Flower parts", "<b>Stamen</b> (male): <b>anther</b> makes pollen + <b>filament</b> holds it up. <b>Carpel</b> (female): <b>stigma</b> catches pollen + <b>style</b> (the neck) + <b>ovary</b> holding ovules. Petals advertise; sepals protect the bud. The video walks through every part — pause and label along with it."], ["Pollination → fertilization", "<b>Pollination</b> = pollen lands on a stigma (by wind, bees, birds…). <b>Fertilization</b> = a pollen tube grows down the style and sperm fuses with the egg in the ovule. Then the <b>ovule becomes the seed</b> and the <b>ovary becomes the fruit</b>. Flowering plants do <b>double fertilization</b>: one sperm makes the embryo, the other makes the <b>endosperm</b> (food)."], ["Genetics in one minute", "Traits come in versions called <b>alleles</b>. <b>Dominant</b> alleles show with just one copy; <b>recessive</b> need two. A <b>Tt × Tt</b> cross gives <b>3:1</b> — three showing the dominant trait for every one showing recessive. In mosses the <b>gametophyte</b> dominates; in ferns and seed plants the <b>sporophyte</b> does."]], "wq": [["After fertilization, the ovary becomes the…", ["fruit", "seed", "flower", "pollen"], 0, "Ovule → seed, ovary → fruit. Classic test trap."], ["In a Tt × Tt cross, the ratio of dominant-trait to recessive-trait offspring is…", ["3:1", "1:1", "1:3", "4:0"], 0, "Three showing dominant for every one recessive — memorize 3:1."]], "qs": [["Pollen is made in the…", ["anther", "ovary", "stigma", "sepal"], 0, "The anther (top of the stamen) makes pollen."], ["After fertilization, the ovary becomes the…", ["fruit", "seed", "flower", "leaf"], 0, "Ovary wall → fruit. Ovules inside → seeds."], ["A dominant allele…", ["shows even with just one copy", "needs two copies to show", "never shows", "only works in animals"], 0, "One dominant copy is enough to show the trait."], ["A Tt × Tt cross gives what ratio?", ["3:1", "1:1", "4:0", "1:3"], 0, "Classic Punnett square: 3 show dominant, 1 shows recessive."], ["In mosses, the dominant stage is the…", ["gametophyte", "sporophyte", "seed", "flower"], 0, "Mosses are the odd ones out — gametophyte dominates."], ["Double fertilization produces…", ["an embryo plus endosperm", "two embryos", "two fruits", "pollen and ovules"], 0, "One sperm + egg = embryo; the other makes endosperm, the seed's food."]]}, {"id": 9, "title": "Plants run the planet's cycles", "sheet": "THE COMPETITION 3d-vi", "yt": "up3TYxZNVmg", "ytTitle": "Nutrient Cycles — carbon, nitrogen & more", "minis": [["The carbon cycle", "Plants pull <b>CO₂ from the air</b> through photosynthesis and lock it into sugar and wood. Animals eat plants, everyone respires CO₂ back out, and decomposers release it from dead matter. Burn ancient plant matter (fossil fuels) and you dump old carbon back into the sky."], ["The nitrogen cycle", "The air is 78% nitrogen, but plants can't use it directly. <b>Nitrogen-fixing bacteria</b> — many living in <b>legume root nodules</b> — convert it into forms plants can absorb. Then: plants → animals → waste/dead matter → <b>decomposers</b> return nutrients to soil → denitrifying bacteria release N₂ back to the air."], ["Why plants rule the cycles", "Plants are the <b>primary producers</b> — nearly every food chain starts with them. <b>Transpiration</b> pumps water vapor into the atmosphere, driving the water cycle. Without plants capturing carbon and hosting nitrogen-fixers, the whole system stalls."]], "wq": [["Plants get usable nitrogen mainly thanks to…", ["nitrogen-fixing bacteria", "lightning only", "their flowers", "earthworms"], 0, "Bacteria (often in legume root nodules) fix nitrogen into usable forms."], ["Fossil fuels are best described as…", ["ancient plant matter storing old sunlight", "liquid minerals from volcanoes", "decomposed plastic", "underground water deposits"], 0, "Coal, oil, and gas are ancient photosynthesis, buried and compressed."]], "qs": [["Plants remove carbon from the air through…", ["photosynthesis", "respiration", "transpiration", "decay"], 0, "Photosynthesis locks CO₂ into glucose."], ["Nitrogen-fixing bacteria live…", ["in legume root nodules", "in the air", "inside leaves", "in flowers"], 0, "The bacteria convert air nitrogen into a form plants can use."], ["Decomposers…", ["break down dead matter, returning nutrients to the soil", "eat living plants", "make oxygen", "fix nitrogen from air"], 0, "Fungi and bacteria recycle everything back into the soil."], ["Transpiration adds what to the atmosphere?", ["Water vapor", "Carbon dioxide", "Oxygen", "Nitrogen"], 0, "Evaporating leaf water becomes atmospheric moisture."], ["Plants are called primary producers because…", ["almost every food chain starts with them", "they produce oxygen only", "they are the first to grow in spring", "they make seeds"], 0, "They turn sunlight into food energy everything else depends on."], ["Fossil fuels are…", ["ancient plant matter storing old sunlight", "made from rocks", "created by volcanoes", "a type of mineral"], 0, "Coal and oil are fossilized photosynthesis."]]}, {"id": 10, "title": "Plants feed & supply us", "sheet": "THE COMPETITION 3d-vii, x", "yt": "chvyTX0bR_8", "ytTitle": "The 3 Staple Foods That Sustain Civilization", "minis": [["The big three", "<b>Rice, wheat, and corn (maize)</b> feed more humans than everything else combined. Rice alone feeds over half the planet. Each was <b>domesticated</b> from wild grasses thousands of years ago and reshaped by <b>selective breeding</b> — humans choosing the best plants to reproduce, generation after generation."], ["Beyond food", "Plants supply us with <b>fiber</b> (cotton for cloth), <b>wood</b> for building, <b>oils</b>, <b>sugar</b> (sugarcane, sugar beets), and <b>medicines</b> — countless modern drugs were first found in plants. Animals depend on plants for <b>food and shelter</b> too."], ["Feeding the future", "Modern farming boosts yields with better varieties, crop rotation, and fertilizer — but faces pests, drought, and disease. That's why the sheet also lists <b>competition, GMOs, and plant diseases</b>: growing enough food is a plant-science problem."]], "wq": [["Rice, wheat, and corn are called staple crops because…", ["they provide most of humanity's calories", "they grow without water", "they are all fruits", "they were discovered last century"], 0, "The big three staple grains underpin human civilization's food supply."], ["Selective breeding means…", ["choosing the best plants to reproduce", "editing genes in a lab", "growing plants in greenhouses", "crossing plants with animals"], 0, "Farmers have done it for thousands of years — pick the winners, replant their seeds."]], "qs": [["Three grains that feed most of humanity:", ["Wheat, rice, and corn", "Oats, barley, rye", "Beans, peas, lentils", "Apples, oranges, bananas"], 0, "Those three staples feed billions."], ["Cotton is…", ["a plant fiber used for cloth", "a type of wood", "a medicine", "a grain"], 0, "Cotton bolls are fluffy seed fibers."], ["Many modern medicines were first found in…", ["plants", "rocks", "plastic", "salt water"], 0, "Willow bark → aspirin is the famous example."], ["Selective breeding means…", ["choosing the best plants to reproduce", "growing plants in a lab only", "random planting", "using wild seeds only"], 0, "Farmers selecting winners over generations made modern crops."], ["Sugar mainly comes from…", ["sugarcane and sugar beets", "maple trees only", "corn stalks", "grass clippings"], 0, "Sugarcane and beets are the big commercial sources."], ["Animals depend on plants for…", ["food and shelter", "nothing much", "only water", "warmth only"], 0, "Herbivores eat them; everyone shelters in or under them."]]}, {"id": 11, "title": "Competition, GMOs & disease", "sheet": "THE COMPETITION 3d-viii, ix, xi", "yt": "jYjvJyEMHZ4", "ytTitle": "What are GMOs? (Genetically Modified Organisms)", "minis": [["Competition", "Plants compete for <b>light, water, and nutrients</b>. A weed shading your crop seedling is competition for light; crowded roots fight over water and minerals. Farmers space, weed, and fertilize to tilt the competition toward the crop."], ["GMOs", "A <b>GMO</b> is an organism with lab-edited genes — e.g., corn given a bacterial gene that kills pests (<b>Bt corn</b>). It started with 10,000 years of selective breeding; genetic engineering just does it precisely, gene by gene. The video shows exactly how Bt corn is made."], ["Disease & deficiency", "Most plant diseases are caused by <b>fungi</b> (rusts, blights, mildews). Farmers fight back with <b>crop rotation</b> — switching crops each season to break disease cycles and restore nutrients. Hungry plants show it: <b>yellow older leaves often mean nitrogen deficiency</b>."]], "wq": [["A weed shading a crop seedling is an example of…", ["competition for light", "a GMO", "a symbiotic relationship", "photosynthesis"], 0, "Both want the same light — the weed wins by growing taller faster."], ["Bt corn is a GMO because…", ["it carries a lab-inserted bacterial gene that kills pests", "it was grown in a greenhouse", "it is watered daily", "it has bigger kernels from fertilizer"], 0, "One bacterial gene, inserted in a lab, makes the corn pest-resistant."]], "qs": [["Plants compete for…", ["light, water, and nutrients", "mates", "territory markers", "oxygen only"], 0, "The big three resources — whoever grabs them grows."], ["A GMO is…", ["an organism with lab-edited genes", "a wild plant", "a fossil plant", "a diseased plant"], 0, "Genetically Modified Organism — genes edited by scientists."], ["Most plant diseases are caused by…", ["fungi", "viruses only", "insects", "cold weather"], 0, "Fungi cause the majority — think blights, rusts, mildews."], ["Yellow older leaves often signal…", ["nitrogen deficiency", "too much water", "a virus", "over-pollination"], 0, "Nitrogen moves to new growth first, so old leaves yellow."], ["Crop rotation helps because it…", ["breaks disease cycles and restores nutrients", "makes fields look neat", "uses more water", "needs no planning"], 0, "Different crops, different pests — rotation starves the diseases out."], ["A weed shading a crop seedling is…", ["competition for light", "a disease", "pollination", "a GMO"], 0, "Stealing sunlight is classic plant competition."]]}, {"id": 12, "title": "Master botanist + history", "sheet": "THE COMPETITION 3d-i + EVERYTHING", "yt": "yAKJy6getFc", "ytTitle": "History of Plant Classification", "minis": [["Theophrastus — the father of botany", "Around 300 BC in ancient Greece, <b>Theophrastus</b> wrote the first systematic books about plants — classifying hundreds of species by their traits and uses. His work stayed authoritative for over 1,500 years. That's why he's called the <b>father of botany</b>."], ["Linnaeus — the name giver", "In the 1700s, <b>Carl Linnaeus</b> created the system we still use: <b>binomial nomenclature</b> — every species gets a two-part Latin name, <i>Genus species</i> (like <i>Homo sapiens</i>, or <i>Quercus alba</i> for white oak). Before him, plant names were chaotic paragraphs."], ["Master challenge remix", "The sheet's greatest hits in one level: <b>mycorrhizae</b> (fungi trading soil minerals for plant sugar — teamwork!), <b>high score wins</b> with <b>pre-selected tiebreakers</b>, and the cheat-sheet rules — <b>one sheet, both sides, no affixed labels, no multiple sheets</b>. Walk in knowing all of it cold."]], "wq": [["Theophrastus earned the title 'father of botany' because he…", ["wrote the first systematic books classifying plants", "invented the microscope", "discovered photosynthesis", "named the rose"], 0, "His plant texts organized hundreds of species — 300 BC, still respected 1,500 years later."], ["In Linnaeus's system, <i>Quercus alba</i> is an example of…", ["binomial nomenclature (Genus species)", "a common name", "a family name", "a fossil label"], 0, "Two-part Latin name: genus first, species second — still the rule today."]], "qs": [["Theophrastus is known as…", ["the father of botany", "the inventor of the microscope", "the first farmer", "a Roman emperor"], 0, "He wrote the first systematic plant texts in ancient Greece."], ["Linnaeus created…", ["the naming and classification system we still use", "photosynthesis", "the first greenhouse", "genetic engineering"], 0, "Genus species — his system still names every plant."], ["Ties in Botany are broken by…", ["pre-selected questions", "a coin flip", "extra time", "judge's choice"], 0, "The sheet says it: pre-selected questions break ties."], ["Which of these is prohibited?", ["Multiple cheat sheets", "Laminating one sheet", "Using both sides of the sheet", "Bringing writing utensils"], 0, "Orange highlight = danger: one sheet only, no affixed labels."], ["Mycorrhizae are…", ["fungi trading minerals for sugar with roots", "a plant disease", "carnivorous fungi", "root hairs"], 0, "Mutualism: fungus extends the roots' reach, plant pays in sugar."], ["Affixed labels on your cheat sheet are…", ["prohibited", "encouraged", "required", "worth bonus points"], 0, "The sheet is explicit: affixed labels are prohibited."]]}, {"id": 13, "title": "Water at the cell level", "sheet": "RESEARCH DEEP DIVE · 3b", "yt": "Rtp80mFQvcc", "ytTitle": "Cell Membranes & Transport — Amoeba Sisters", "minis": [["Diffusion", "<b>Diffusion</b> = molecules drift from <b>crowded → less crowded</b> (high to low concentration) until evenly spread. No energy needed — it's passive. Perfume crossing a room is diffusion."], ["Osmosis", "<b>Osmosis</b> = diffusion of <b>water</b> across a membrane, toward the <b>saltier side</b>. Root hairs absorb soil water by osmosis. In very salty surroundings, water <i>leaves</i> the cell and the membrane pulls away from the wall — that's <b>plasmolysis</b>."], ["Turgor — the plant's hydraulics", "Water filling the <b>central vacuole</b> pushes against the cell wall — <b>turgor pressure</b> — and that's what holds a plant upright. Lose water → lose turgor → <b>wilt</b>. A wilted plant usually just needs a drink."]], "wq": [["Osmosis is best defined as…", ["water moving across a membrane toward the saltier side", "any molecule moving with energy", "water moving away from salt", "sugar moving into roots"], 0, "Osmosis is water's version of diffusion — across a membrane, toward higher solute."], ["A wilted plant most likely needs…", ["water — its cells lost turgor", "more sunlight only", "less soil", "a bigger pot"], 0, "Wilting = cells lost turgor pressure. Water restores it."]], "qs": [["Osmosis is…", ["water moving across a membrane toward the saltier side", "molecules moving from low to high concentration", "active pumping of sugar", "water evaporating from leaves"], 0, "Osmosis = water diffusing toward higher solute concentration."], ["Turgor pressure…", ["is water pressure that keeps plants upright", "pushes water down to the roots", "only exists in seeds", "makes flowers colorful"], 0, "Water-filled vacuoles press against walls — the plant's hydraulics."], ["A wilted plant most likely needs…", ["water — its cells lost turgor", "more sunlight", "fertilizer", "pruning"], 0, "Wilting = cells deflated. Water restores turgor."], ["Root hairs absorb water mainly by…", ["osmosis", "active transport of light", "photosynthesis", "transpiration"], 0, "Soil water moves into the root cells by osmosis."], ["Plasmolysis happens when…", ["water leaves the cell in very salty surroundings", "the cell divides", "chloroplasts burst", "seeds germinate"], 0, "Water exits toward the saltier outside; the membrane shrinks from the wall."], ["In diffusion, molecules move…", ["from high to low concentration", "from low to high concentration", "only with energy input", "in circles"], 0, "Down the concentration gradient — no energy needed."]]}, {"id": 14, "title": "Photosynthesis up close", "sheet": "RESEARCH DEEP DIVE · 3d-iii", "yt": "P_JU9vYd5O0", "ytTitle": "C3, C4 and CAM Photosynthesis & Photorespiration", "minis": [["Inside the chloroplast", "Two stages, two locations: <b>light reactions</b> on the <b>thylakoid membranes</b> — split water, release O₂, make ATP + NADPH. <b>Calvin cycle</b> in the <b>stroma</b> — spends that energy building glucose from CO₂. <b>Chlorophyll a</b> is the main pigment; <b>chlorophyll b</b> is the helper — both grab red and blue light."], ["The photorespiration problem", "The carbon-fixing enzyme <b>RuBisCO</b> sometimes grabs <b>oxygen</b> instead of CO₂ — a wasteful mistake called <b>photorespiration</b> that gets worse in heat. Plants evolved workarounds, and the video compares them head to head."], ["C3 vs C4 vs CAM", "<b>C3</b> (most plants, e.g. rice, wheat): standard, struggles in heat. <b>C4</b> (corn, sugarcane): fixes CO₂ first in mesophyll cells, then runs the Calvin cycle in bundle-sheath cells — thrives in heat. <b>CAM</b> (cacti, pineapple): opens stomata <b>at night</b> to trap CO₂, then photosynthesizes by day with stomata shut."]], "wq": [["The oxygen plants release comes from…", ["split water molecules", "carbon dioxide", "glucose", "chlorophyll"], 0, "Light reactions split H₂O — the O₂ is exhaust from that split."], ["CAM plants open their stomata at night to…", ["take in CO₂ while losing less water", "sleep", "avoid bees", "absorb moonlight"], 0, "Night air is cooler and damper — CO₂ in, water stays in."]], "qs": [["The light reactions happen in the…", ["thylakoid membranes", "stroma", "cell wall", "vacuole"], 0, "Thylakoids capture light, split water, and release O₂."], ["The Calvin cycle…", ["builds glucose from CO₂", "splits water", "absorbs light", "makes chlorophyll"], 0, "The stroma's cycle turns CO₂ into sugar using light-reaction energy."], ["The oxygen plants release comes from…", ["split water molecules", "carbon dioxide", "glucose", "the air"], 0, "Water is split in the light reactions — O₂ is the leftover."], ["C4 plants like corn are special because they…", ["photosynthesize efficiently in hot, dry conditions", "don't need light", "skip the Calvin cycle", "grow only at night"], 0, "C4 is a heat-adapted upgrade of photosynthesis."], ["CAM plants open their stomata…", ["at night", "at noon", "never", "only when raining"], 0, "Cool night air means less water lost while grabbing CO₂."], ["Chlorophyll b…", ["helps capture light energy", "is the main pigment", "reflects all light", "stores water"], 0, "Chlorophyll a does the main work; b broadens the catch."]]}, {"id": 15, "title": "Anatomy up close", "sheet": "RESEARCH DEEP DIVE · 3b", "yt": "tugfT5p9oMk", "ytTitle": "Plant Tissues — xylem, phloem & root hairs", "minis": [["Three tissue systems", "<b>Dermal</b> = the skin (epidermis + waxy cuticle). <b>Ground</b> = the filler (mesophyll, storage cells). <b>Vascular</b> = the pipes (xylem + phloem). Every plant organ is built from these three — the video's summary table is worth pausing on."], ["Stems, roots, leaves up close", "<b>Nodes</b> = where leaves attach; <b>internodes</b> = between. The <b>root cap</b> protects the growing tip. In stems, vascular bundles are <b>scattered in monocots</b> and <b>in a ring in dicots</b>. <b>Bark</b> is mostly phloem + cork; <b>wood</b> is secondary xylem."], ["Growth rings", "The <b>vascular cambium</b> makes new xylem inward and phloem outward each year. Fast spring growth = light wood; slow summer = dark wood. <b>One light band + one dark band = one year.</b> Count the rings, count the years."]], "wq": [["Which tissue system is the plant's 'skin'?", ["Dermal", "Ground", "Vascular", "Meristematic"], 0, "Dermal tissue — epidermis plus the waxy cuticle."], ["One light band plus one dark band of wood equals…", ["one year of growth", "one month", "one decade", "one growing season of leaves"], 0, "Spring wood (light) + summer wood (dark) = one annual ring."]], "qs": [["The three tissue systems are…", ["dermal, ground, and vascular", "root, stem, and leaf", "xylem, phloem, and cambium", "node, internode, and bud"], 0, "Skin, filler, pipes — every plant is built from these."], ["Nodes are the spots where…", ["leaves attach to the stem", "roots branch", "flowers open", "seeds form"], 0, "Node = attachment point; internode = the stretch between."], ["In a monocot stem, vascular bundles are…", ["scattered", "in a neat ring", "only at the top", "absent"], 0, "Scattered = monocot. Ring = dicot."], ["Bark is mostly…", ["phloem plus cork", "xylem", "heartwood", "cambium"], 0, "Bark = the outer phloem and protective cork."], ["What protects the growing root tip?", ["The root cap", "Root hairs", "The cuticle", "Bark"], 0, "The cap shields the delicate meristem as it pushes through soil."], ["One light band + one dark band of wood equals…", ["one year of growth", "one month", "one decade", "one drought"], 0, "That's a growth ring — wide rings mean great growing years."]]}, {"id": 16, "title": "The great water climb", "sheet": "RESEARCH DEEP DIVE · 3b", "yt": "bSf1bMpWo1U", "ytTitle": "What is transpiration? (cohesion–tension)", "minis": [["The 100-meter problem", "How does water climb a redwood with no pump? <b>Cohesion</b> = water molecules cling to <i>each other</i> (hydrogen bonds). <b>Adhesion</b> = water clings to the <i>xylem walls</i>. Together they form one unbroken column from roots to leaves."], ["Transpiration pull", "Water evaporates from leaves (<b>transpiration</b>) → tugs the column upward → roots pull more from soil. That's the <b>cohesion-tension theory</b>. Roots also push a little (<b>root pressure</b>) — that's what causes <b>guttation</b>, those morning droplets on leaf edges."], ["Speed it up, slow it down", "Transpiration <b>speeds up</b> with heat, wind, dry air, and light. It <b>slows down</b> with humidity and cold. Wind sweeps away the humid air hugging the leaf; humidity kills the gradient. The video even ends with a question on exactly this."]], "wq": [["Water climbs tall trees mainly because of…", ["transpiration pull (cohesion-tension)", "root pushing alone", "gravity", "capillary action in leaves only"], 0, "Evaporation at the leaves pulls the whole cohesive column up."], ["After rainfall, humidity rises. Transpiration will…", ["slow down", "speed up", "stop instantly", "reverse direction"], 0, "Humid air shrinks the gradient — less evaporation, slower pull."]], "qs": [["Water climbs tall trees mainly by…", ["transpiration pull (cohesion-tension)", "roots pumping hard", "capillary action alone", "gravity"], 0, "Evaporation tugs an unbroken water column all the way up."], ["Cohesion means water molecules…", ["cling to each other", "repel each other", "evaporate instantly", "freeze easily"], 0, "Hydrogen bonds chain the molecules into one pullable column."], ["Guttation is…", ["water droplets pushed out at leaf edges", "dew forming on grass", "rain on leaves", "sap leaking from bark"], 0, "Root pressure pushes water out through special pores, usually at dawn."], ["Wind speeds up transpiration because it…", ["sweeps away the humid air around leaves", "cools the roots", "closes the stomata", "pushes water up the stem"], 0, "Less humid air at the surface = faster evaporation."], ["High humidity…", ["slows transpiration", "speeds transpiration", "stops photosynthesis", "opens stomata wider"], 0, "Moist air can't take much more water — evaporation stalls."], ["Root pressure…", ["pushes water upward from the roots", "pulls water from the leaves", "only works at night", "replaces transpiration"], 0, "A gentle upward push from below, strongest when transpiration is low."]]}, {"id": 17, "title": "Hormones & plant movement", "sheet": "RESEARCH DEEP DIVE · growth", "yt": "rKHIfsHX1aA", "ytTitle": "Plant Hormones — Tropisms & Auxins (Cognito)", "minis": [["The big five hormones", "<b>Auxin</b> — cell stretching; phototropism + apical dominance. <b>Gibberellins</b> — stem elongation, waking seeds. <b>Cytokinins</b> — cell division, new shoots. <b>Abscisic acid (ABA)</b> — dormancy, slams stomata shut in drought. <b>Ethylene</b> — gas that ripens fruit and drops old leaves."], ["Auxin in action", "Auxin piles up on the <b>shaded side</b> of a stem → those cells stretch → the stem <b>bends toward light</b> (phototropism). Auxin from the top bud also suppresses side buds — <b>apical dominance</b>. Snip the top bud and the plant bushes out."], ["Tropisms", "<b>Tropism</b> = growth toward/away from a stimulus. <b>Phototropism</b> (light), <b>gravitropism</b> (gravity — roots down, shoots up), <b>thigmotropism</b> (touch — vines curling around a fence). Positive = toward, negative = away."]], "wq": [["A shoot bending toward a window is showing…", ["positive phototropism", "negative gravitropism", "thigmotropism", "apical dominance"], 0, "Growth toward light = positive phototropism, driven by auxin."], ["In a drought, abscisic acid (ABA)…", ["closes the stomata to save water", "opens the stomata wider", "ripens the fruit", "kills the roots"], 0, "ABA is the stress signal — shut the pores, keep the water."]], "qs": [["Apical dominance — the top bud suppressing side buds — is caused by…", ["auxin", "ethylene", "cytokinin", "abscisic acid"], 0, "Auxin flowing down from the tip tells side buds to wait."], ["Which hormone wakes seeds up?", ["Gibberellins", "Auxin", "Ethylene", "Abscisic acid"], 0, "Gibberellins trigger germination and stem stretching."], ["A vine curling around a fence shows…", ["thigmotropism", "phototropism", "gravitropism", "dormancy"], 0, "Thigmo = touch. Contact triggers the curl."], ["In a drought, abscisic acid…", ["closes the stomata to save water", "opens stomata wide", "makes more flowers", "speeds up growth"], 0, "ABA is the stress signal: shut the pores, keep the water."], ["Ethylene triggers…", ["fruit ripening and leaf drop", "root growth", "seed dormancy", "flower color"], 0, "The gaseous hormone: ripen now, drop old leaves later."], ["Roots growing downward show…", ["positive gravitropism", "negative gravitropism", "phototropism", "thigmotropism"], 0, "Toward gravity = positive; shoots growing up = negative."]]}, {"id": 18, "title": "Reproduction up close", "sheet": "RESEARCH DEEP DIVE · 3d-ii", "yt": "ExaQ8shhkw8", "ytTitle": "The Plants & The Bees — CrashCourse #38", "minis": [["Alternation of generations", "Every plant alternates: <b>sporophyte</b> (2n, makes spores) ↔ <b>gametophyte</b> (n, makes gametes). <b>Mosses</b>: gametophyte dominates. <b>Ferns</b>: sporophyte dominates, gametophyte tiny. <b>Seed plants</b>: gametophytes are microscopic — a <b>pollen grain IS the male gametophyte</b>. The video traces this from ferns to flowers."], ["Pollination syndromes", "Flowers advertise to specific pollinators: <b>bees</b> → bright, sweet; <b>moths</b> → white, night-scented; <b>wind</b> → no petals, mountains of pollen; <b>birds</b> → red, tubular, scentless. Match the flower to the pollinator and you've cracked the syndrome."], ["Seeds & clones", "A seed = <b>embryo</b> (baby plant) + <b>endosperm</b> (food) + <b>seed coat</b> (armor). Germination needs <b>water, oxygen, warmth</b>. And plants cheat: <b>runners, bulbs, tubers, cuttings</b> make new plants with zero sex — all <b>clones</b> (asexual reproduction)."]], "wq": [["A pollen grain is…", ["the male gametophyte", "a seed", "a spore that makes leaves", "the female gametophyte"], 0, "Tiny but mighty — the entire male gametophyte generation in one grain."], ["Red, tubular, scentless flowers are usually pollinated by…", ["birds", "bees", "moths", "wind"], 0, "Birds see red well and don't care about scent — classic bird syndrome."]], "qs": [["In ferns, the dominant generation is the…", ["sporophyte", "gametophyte", "seed", "flower"], 0, "The big leafy fern IS the sporophyte; its gametophyte is tiny."], ["A pollen grain is…", ["the male gametophyte", "a seed", "a spore", "the female gametophyte"], 0, "In seed plants the gametophyte is reduced to microscopic size."], ["The endosperm's job is to…", ["feed the embryo", "become the fruit", "attract pollinators", "make the seed coat"], 0, "It's the packed lunch inside the seed."], ["Seeds need what to germinate?", ["Water, oxygen, and warmth", "Light only", "Soil only", "Cold only"], 0, "Water wakes it, oxygen fuels it, warmth speeds it."], ["New plants from a spider plant's runners are…", ["clones (asexual reproduction)", "grown from seeds", "hybrids", "gametophytes"], 0, "Runners make genetically identical copies — no pollination needed."], ["Red, tubular, scentless flowers are usually pollinated by…", ["birds", "bees", "moths", "wind"], 0, "Birds see red well; bees can't. Flower shape advertises its pollinator."]]}, {"id": 19, "title": "Meet the plant kingdom", "sheet": "RESEARCH DEEP DIVE · 3c, 3d-iv", "yt": "A_DF246uVlU", "ytTitle": "Plants: Diversity, Structure & Adaptations — Amoeba Sisters", "minis": [["Bryophytes — the amphibians", "<b>Mosses, liverworts, hornworts.</b> No vascular tissue, no true roots/stems/leaves, and sperm must <b>swim</b> — so they need water to reproduce. Small, damp, ancient."], ["Seedless vascular plants", "<b>Ferns, horsetails, clubmosses.</b> They've got vascular pipes (xylem + phloem) and true organs — but still reproduce by <b>spores</b>, and sperm still swim. The video's vascular vs. nonvascular section nails this split."], ["Seed plants take over", "<b>Gymnosperms</b> (pines, firs, cycads, ginkgo): naked seeds in cones, no flowers. <b>Angiosperms</b>: flowering plants — <b>monocots</b> (grasses, lilies, orchids) and <b>dicots</b> (roses, oaks, sunflowers) — now ~<b>90% of all plants</b>. Flowers + animal pollinators = world domination."]], "wq": [["Horsetails are…", ["seedless vascular plants", "bryophytes", "gymnosperms", "angiosperms"], 0, "Vascular pipes? Yes. Seeds? No. Spores? Yes. Seedless vascular."], ["About how much of the plant kingdom is angiosperms?", ["Around 90%", "Around 50%", "Around 10%", "Around 25%"], 0, "Flowering plants dominate — roughly nine out of ten plant species."]], "qs": [["Liverworts belong to the…", ["bryophytes", "gymnosperms", "ferns", "angiosperms"], 0, "Liverworts are bryophytes — small, no vascular tissue."], ["Horsetails are…", ["seedless vascular plants", "mosses", "gymnosperms", "angiosperms"], 0, "Vascular pipes + spores = seedless vascular, like ferns."], ["Ginkgo is a…", ["gymnosperm", "angiosperm", "fern", "moss"], 0, "A living fossil with naked seeds — classic gymnosperm."], ["Orchids are…", ["monocot angiosperms", "dicot angiosperms", "gymnosperms", "bryophytes"], 0, "Orchids: flower parts in 3s, parallel veins — monocot."], ["What do ferns and mosses both still need for reproduction?", ["Water for sperm to swim", "Flowers", "Cones", "Fruit"], 0, "Neither makes pollen — their sperm swim to the egg."], ["About how much of the plant kingdom is angiosperms?", ["Around 90%", "Around 10%", "Around 50%", "Less than 1%"], 0, "Flowering plants absolutely dominate."]]}, {"id": 20, "title": "Station skills", "sheet": "EVENT PARAMETERS 2d — stations", "yt": "YzrPooVlD9M", "ytTitle": "How to Use a Microscope Explained", "minis": [["The routine", "<b>Carry</b> with two hands (arm + base). <b>Light on.</b> Start on the <b>lowest power</b> objective. <b>Slide on</b> the stage, clipped, centered over the light. <b>Coarse focus</b> to find it, <b>fine focus</b> to sharpen. Only then rotate to higher power — and up there, <b>fine knob only</b>. The video demos every step."], ["The math", "<b>Total magnification = eyepiece × objective.</b> 10× eyepiece × 40× objective = 400×. They love this as a station question — it's pure multiplication."], ["Reading stations like a pro", "<b>Graphs:</b> axis labels + units FIRST, then the trend. <b>Data tables:</b> compare row by row, watch the units — that's where they hide tricks. <b>Specimens:</b> one trait at a time. Cone or flower? Veins parallel or netted? Flower parts in 3s or 5s? Each answer narrows it down."]], "wq": [["After finding your specimen on low power, you switch to high power. Which knob do you use now?", ["Fine adjustment only", "Coarse adjustment only", "The light switch", "The stage clips"], 0, "Coarse on high power can smash the lens into the slide — fine knob only."], ["A 10× eyepiece with a 40× objective gives…", ["400× total magnification", "50× total magnification", "40× total magnification", "4000× total magnification"], 0, "Multiply: 10 × 40 = 400."]], "qs": [["Total magnification equals…", ["eyepiece × objective", "eyepiece + objective", "objective − eyepiece", "eyepiece alone"], 0, "Multiply them: 10× eyepiece × 40× objective = 400×."], ["The first step with a microscope is to…", ["start on the lowest power", "use maximum zoom", "stare into the light", "remove the slide"], 0, "Low power first to find your specimen, then zoom in."], ["When reading a graph, check first…", ["the axis labels and units", "the title font", "the colors", "the paper size"], 0, "Labels and units tell you what you're actually looking at."], ["To identify an unknown leaf, start with…", ["one clear trait, like the vein pattern", "guessing the species", "smelling it", "counting every leaf"], 0, "One trait at a time: veins? flower parts? cone or flower?"], ["A cone sitting on the specimen table tells you it's a…", ["gymnosperm", "angiosperm", "fern", "moss"], 0, "Cones with naked seeds = gymnosperm, every time."], ["Parallel veins plus flower parts in 3s means…", ["monocot", "dicot", "gymnosperm", "algae"], 0, "The classic monocot combo."]]}];
+const NEED=2;
+let player=null;try{player=localStorage.getItem('botanyPlayer');}catch(e){}
+function skey(){return 'botanyGrow_'+player;}
+let state=null;
+function loadState(){
+  try{state=JSON.parse(localStorage.getItem(skey()));}catch(e){state=null;}
+  if(!state||typeof state.done!=='number'){
+    let legacy=null;try{legacy=JSON.parse(localStorage.getItem('botanyGrow'));}catch(e){}
+    if(legacy&&typeof legacy.done==='number'){state=legacy;try{localStorage.removeItem('botanyGrow');}catch(e){}}
+    else state={done:0,stages:{}};
+  }
+  if(!state.stages||typeof state.stages!=='object'){
+    state.stages={};
+    for(let i=1;i<=Math.min(state.done,20);i++)state.stages[i]={lesson:true,mi:2,wq:[true,true],qa:true,qb:true,qo:null};
+  }
+  save();
+}
+function save(){if(!player)return;try{localStorage.setItem(skey(),JSON.stringify(state));}catch(e){}}
+if(player)loadState();else state={done:0,stages:{}};
+function stage(lid){if(!state.stages[lid])state.stages[lid]={lesson:false,mi:0,wq:[false,false],qa:false,qb:false,qo:null};return state.stages[lid];}
+function levelComplete(lid){const s=state.stages[lid];return !!(s&&s.lesson&&s.wq[0]&&s.wq[1]&&s.qa&&s.qb);}
+function unlocked(lid){return lid===1||levelComplete(lid-1);}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+/* ---------- garden ---------- */
+const stageEls=['stage0','stage1','stage2','stage3','stage4','stage5'];
+const notes=["finish Expedition 1 to sprout","it sprouted! keep going","growing strong","it is budding!","it bloomed!","fruit! the garden is growing","a bee moved in","a butterfly stopped by","a new flower opened","more fruit on the branches","mushrooms joined the soil","golden seal: sheet expert","the sun came out","rain for the garden","a new sprout appeared","the sprout bloomed","a bird visits","a ladybug moved in","a mushroom ring formed","GRANDMASTER BOTANIST"];
+function drawPlant(){
+  const done=state.done;
+  const g=Math.min(done,5);
+  stageEls.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===g?'block':'none';});
+  for(let i=6;i<=19;i++){const el=document.getElementById('ex'+i);if(el)el.style.display=done>=i?'block':'none';}
+  const gn=document.getElementById('growNote');if(gn)gn.textContent=notes[Math.min(done,19)];
+}
+/* ---------- title screen ---------- */
+const ts=document.getElementById('titleScreen');
+function updateTitle(){
+  document.getElementById('titleProgress').textContent='Garden growth: '+state.done+' / 20 expeditions cleared';
+  const tf=document.getElementById('tfill');if(tf)tf.style.width=(state.done/20*100)+'%';
+  document.getElementById('beginBtn').textContent=state.done>0?'Continue the expedition':'Begin the expedition';
+  document.getElementById('hudFill').style.width=(state.done/20*100)+'%';
+  document.getElementById('hudText').textContent=state.done+' / 20 cleared';
+  document.getElementById('whoName').textContent=player?('growing as '+player):'';
+}
+document.getElementById('beginBtn').onclick=()=>{
+  ts.classList.add('gone');setTimeout(()=>ts.style.display='none',650);
+  const next=Math.min(state.done+1,20);
+  const el=document.getElementById('card'+next);if(el)el.scrollIntoView({behavior:'smooth'});
+};
+document.getElementById('gardenBtn').onclick=()=>{
+  ts.classList.add('gone');setTimeout(()=>ts.style.display='none',650);
+  document.getElementById('garden').scrollIntoView({behavior:'smooth'});
+};
+document.getElementById('resetBtn').onclick=()=>{if(confirm('Start the whole course over? Your garden resets to a seed.')){state={done:0,stages:{}};save();render();}};
+for(let i=0;i<26;i++){const p=document.createElement('div');p.className='pp';p.style.left=Math.random()*100+'%';p.style.bottom='-12px';const s=3+Math.random()*5;p.style.width=s+'px';p.style.height=s+'px';p.style.animationDuration=(7+Math.random()*9)+'s';p.style.animationDelay=(Math.random()*9)+'s';ts.appendChild(p);}
+
+/* ---------- players: everyone gets their own garden ---------- */
+function safeName(n){return (n||'').trim().slice(0,24);}
+function knownPlayers(){let r=[];try{r=JSON.parse(localStorage.getItem('botanyPlayers'))||[];}catch(e){}return Array.isArray(r)?r.filter(x=>typeof x==='string'&&x):[];}
+function rememberPlayer(n){const r=knownPlayers();if(r.indexOf(n)<0){r.push(n);try{localStorage.setItem('botanyPlayers',JSON.stringify(r));}catch(e){}}}
+function choosePlayer(n){
+  n=safeName(n);if(!n)return;
+  player=n;try{localStorage.setItem('botanyPlayer',player);}catch(e){}
+  rememberPlayer(n);loadState();render();
+  document.getElementById('whoOverlay').style.display='none';
+}
+function showWho(){
+  const ov=document.getElementById('whoOverlay');ov.style.display='flex';
+  const list=document.getElementById('whoList');const r=knownPlayers().filter(n=>n!==player);
+  list.innerHTML=r.length?'<div style="width:100%;color:#a9bfa0;font-size:.9rem">or tap a name:</div>'+r.map(n=>'<button data-n="'+esc(n).replace(/"/g,'&quot;')+'">'+esc(n)+'</button>').join(''):'';
+  const btns=list.querySelectorAll('button');for(let i=0;i<btns.length;i++){btns[i].onclick=function(){choosePlayer(this.getAttribute('data-n'));};} 
+  const inp=document.getElementById('whoInput');inp.value='';setTimeout(function(){inp.focus();},100);
+}
+document.getElementById('whoGo').onclick=function(){choosePlayer(document.getElementById('whoInput').value);};
+document.getElementById('whoInput').addEventListener('keydown',function(e){if(e.key==='Enter')choosePlayer(e.target.value);});
+document.getElementById('switchPlayer').onclick=function(){showWho();};
+
+/* ---------- stage pills ---------- */
+function pills(lid){
+  const s=stage(lid);
+  const wqDone=s.wq[0]&&s.wq[1];
+  const items=[['Lesson',s.lesson],['Watch',wqDone],['Quiz A',s.qa],['Quiz B',s.qb]];
+  return '<div class="stages">'+items.map((it,i)=>{
+    const cls=it[1]?'done':(i===items.findIndex(x=>!x[1])?'cur':'lock');
+    return '<span class="spill '+cls+'">'+(it[1]?'✓ ':'')+it[0]+'</span>';
+  }).join('')+'</div>';
+}
+
+/* ---------- render ---------- */
+const ui={mini:{}};
+function render(){
+  drawPlant();updateTitle();
+  let h='';
+  LEVELS.forEach(L=>{
+    const lid=L.id, s=stage(lid), un=unlocked(lid), doneL=levelComplete(lid);
+    h+='<div class="card'+(doneL?' cleared':'')+'" id="card'+lid+'">';
+    h+='<span class="plate">FIELD ENTRY No. '+lid+' · '+L.sheet+'</span>';
+    h+='<h2>'+lid+'. '+L.title+'</h2>'+pills(lid);
+    if(!un){h+='<p class="statline">🔒 Clear expedition '+(lid-1)+' to unlock this one.</p></div>';return;}
+    /* --- stage 1: lesson --- */
+    h+='<div class="stage-sec" id="sec-lesson'+lid+'"><div class="shead">① Field lesson</div><div id="minis'+lid+'"></div></div>';
+    /* --- stage 2: watch --- */
+    const wLocked=!s.lesson;
+    h+='<div class="stage-sec'+(wLocked?' locked':'')+'" id="sec-watch'+lid+'"><div class="shead">② Watch & answer</div>';
+    if(wLocked){h+='<p class="statline">Finish the field lesson first.</p>';}
+    else{
+      h+='<div id="watchbody'+lid+'"></div>';
+    }
+    h+='</div>';
+    /* --- stage 3: quiz A --- */
+    const wqDone=s.wq[0]&&s.wq[1];
+    h+='<div class="stage-sec'+(wqDone?'':' locked')+'" id="sec-qa'+lid+'"><div class="shead">③ Quiz A — 3 questions</div><div id="qza'+lid+'">';
+    h+=wqDone?quizTeaser(lid,'a'):'<p class="statline">Answer both watch questions first.</p>';
+    h+='</div></div>';
+    /* --- stage 4: quiz B --- */
+    h+='<div class="stage-sec'+(s.qa?'':' locked')+'" id="sec-qb'+lid+'"><div class="shead">④ Quiz B — 3 questions</div><div id="qzb'+lid+'">';
+    h+=s.qa?quizTeaser(lid,'b'):'<p class="statline">Pass Quiz A first.</p>';
+    h+='</div></div>';
+    if(doneL)h+='<p class="statline">🌻 Expedition cleared — your garden grew.</p>';
+    h+='</div>';
+  });
+  document.getElementById('levels').innerHTML=h;
+  LEVELS.forEach(L=>{if(unlocked(L.id)){renderMinis(L.id);renderWatch(L.id);}});
+}
+function quizTeaser(lid,ab){
+  const s=stage(lid), passed=ab==='a'?s.qa:s.qb;
+  if(passed)return '<p class="statline">✓ Passed.</p><button class="ghostbtn" onclick="showQuiz('+lid+',\''+ab+'\')">Replay</button>';
+  return '<button class="bigbtn" onclick="showQuiz('+lid+',\''+ab+'\')">Start Quiz '+ab.toUpperCase()+'</button>';
+}
+/* ---------- lesson stepper ---------- */
+function renderMinis(lid){
+  const L=LEVELS[lid-1], s=stage(lid), box=document.getElementById('minis'+lid);
+  if(!box)return;
+  if(s.lesson){box.innerHTML='<p class="statline">✓ Lesson complete. <button class="ghostbtn" onclick="reopenLesson('+lid+')">Review</button></p>';return;}
+  const i=Math.min(s.mi||0,2), m=L.minis[i];
+  let h='<div class="minicard"><div class="minititle">'+m[0]+'</div><div>'+m[1]+'</div></div>';
+  h+='<div class="mdots">'+[0,1,2].map(k=>'<span class="mdot'+(k===i?' on':'')+'"></span>').join('')+'</div>';
+  h+='<div class="minav"><button class="ghostbtn" '+(i===0?'disabled style="opacity:.4"':'')+' onclick="miniNav('+lid+',-1)">← Back</button>';
+  if(i<2)h+='<button class="bigbtn" onclick="miniNav('+lid+',1)">Next →</button>';
+  else h+='<button class="bigbtn" onclick="finishLesson('+lid+')">Finish lesson ✓</button>';
+  h+='</div>';
+  box.innerHTML=h;
+}
+function miniNav(lid,d){const s=stage(lid);s.mi=Math.max(0,Math.min(2,(s.mi||0)+d));save();renderMinis(lid);}
+function reopenLesson(lid){const s=stage(lid);s.lesson=false;s.mi=0;save();render();}
+function finishLesson(lid){const s=stage(lid);s.lesson=true;save();render();}
+
+/* ---------- watch stage ---------- */
+function renderWatch(lid){
+  const L=LEVELS[lid-1], s=stage(lid), box=document.getElementById('watchbody'+lid);
+  if(!box)return;
+  if(!s.lesson){box.innerHTML='';return;}
+  const doneW=s.wq[0]&&s.wq[1];
+  if(doneW){
+    box.innerHTML='<p class="statline">✓ Watch complete — both check-ins answered.</p>'+(L.yt?'<button class="ghostbtn" onclick="loadVideo('+lid+',true)">Watch again</button>':'');
+    return;
+  }
+  if(!L.yt){
+    box.innerHTML='<div class="ytfallback"><b>Your event sheet is the star of this one</b> — no video needed. Rules are rules: read them, then answer.</div><div id="wqs'+lid+'"></div>';
+    renderStaticWQ(lid);
+    return;
+  }
+  let h='<p class="statline">🎬 '+esc(L.ytTitle)+'</p>';
+  h+='<button class="bigbtn" id="ytload'+lid+'" onclick="loadVideo('+lid+')">▶ Load the video</button>';
+  h+='<div class="ytwrap" id="ytw'+lid+'" style="display:none"><div id="ytp'+lid+'"></div><div class="wqov" id="wqo'+lid+'" style="display:none"></div></div>';
+  h+='<div id="ckp'+lid+'"></div>';
+  box.innerHTML=h;renderCheckpoints(lid);
+}
+function renderCheckpoints(lid){
+  const L=LEVELS[lid-1], s=stage(lid), box=document.getElementById('ckp'+lid);
+  if(!box)return;
+  box.innerHTML=[0,1].map(i=>{
+    const done=s.wq[i];
+    return '<div class="ckrow'+(done?' answered':'')+'" onclick="ckTap('+lid+','+i+')"><span class="ckmark">'+(done?'✓':'•')+'</span><span>'+(done?'Check-in '+(i+1)+' answered':'Check-in '+(i+1)+': tap to answer')+'</span></div>';
+  }).join('');
+}
+function ckTap(lid,i){const s=stage(lid);if(s.wq[i])return;if(YTPlayer&&YTCur===lid){try{YTPlayer.pauseVideo();}catch(e){}}askWatch(lid,i);}
+function renderStaticWQ(lid){
+  const L=LEVELS[lid-1], s=stage(lid), box=document.getElementById('wqs'+lid);
+  if(!box)return;
+  box.innerHTML=L.wq.map((q,i)=>{
+    if(s.wq[i])return '<div class="qblock"><h5>✓ Check-in '+(i+1)+'</h5><p class="statline">Answered.</p></div>';
+    const opts=shuffle(q[1].map((t,oi)=>({t,oi})));
+    return '<div class="qblock"><h5>Check-in '+(i+1)+': '+q[0]+'</h5><div class="qopts">'+opts.map(o=>'<button class="qopt" onclick="ansStaticWQ(this,'+lid+','+i+','+o.oi+')">'+o.t+'</button>').join('')+'</div><div class="qwhy" id="wqy'+lid+'_'+i+'" style="display:none"></div></div>';
+  }).join('');
+}
+function ansStaticWQ(btn,lid,i,oi){
+  const L=LEVELS[lid-1], s=stage(lid), q=L.wq[i];
+  const btns=btn.parentElement.querySelectorAll('.qopt');
+  btns.forEach(b=>{b.disabled=true;if(b.textContent===q[1][q[2]])b.classList.add('right');});
+  if(oi!==q[2])btn.classList.add('wrong');
+  const why=document.getElementById('wqy'+lid+'_'+i);why.style.display='block';why.innerHTML='<b>Why:</b> '+q[3];
+  s.wq[i]=true;save();
+  setTimeout(()=>{if(s.wq[0]&&s.wq[1]){render();}else{renderStaticWQ(lid);}refreshPills(lid);},900);
+}
+function refreshPills(lid){const el=document.querySelector('#card'+lid+' .stages');if(el){const tmp=document.createElement('div');tmp.innerHTML=pills(lid);el.replaceWith(tmp.firstChild);}}
+/* ---------- YouTube interactive video ---------- */
+let YTPlayer=null,YTCur=null,YTTimer=null,ytApiReady=false,ytApiLoading=false;const ytApiWait=[];
+function ensureYT(cb){
+  if(ytApiReady)return cb();
+  ytApiWait.push(cb);
+  if(ytApiLoading)return;
+  ytApiLoading=true;
+  const sc=document.createElement('script');sc.src='https://www.youtube.com/iframe_api';
+  sc.onerror=()=>{ytApiLoading=false;ytApiFailed();};
+  document.head.appendChild(sc);
+  setTimeout(()=>{if(!ytApiReady&&ytApiLoading){ytApiLoading=false;ytApiFailed();}},12000);
+}
+function onYouTubeIframeAPIReady(){ytApiReady=true;ytApiLoading=false;const w=ytApiWait.splice(0);w.forEach(f=>f());}
+function ytApiFailed(){
+  if(YTCur==null)return;
+  const lid=YTCur;YTCur=null;
+  const box=document.getElementById('watchbody'+lid);
+  if(box){box.innerHTML='<div class="ytfallback"><b>Video could not load</b> — you may be offline. Answer the check-ins below instead; they cover the same ideas.</div><div id="wqs'+lid+'"></div>';renderStaticWQ(lid);}
+}
+function loadVideo(lid,force){
+  const L=LEVELS[lid-1],s=stage(lid);
+  if(!L.yt||!s.lesson)return;
+  const btn=document.getElementById('ytload'+lid);if(btn)btn.style.display='none';
+  const wrap=document.getElementById('ytw'+lid);if(wrap)wrap.style.display='block';
+  ensureYT(()=>{
+    if(!document.getElementById('ytp'+lid))return;
+    if(YTPlayer){try{YTPlayer.destroy();}catch(e){}YTPlayer=null;}
+    clearInterval(YTTimer);YTCur=lid;
+    YTPlayer=new YT.Player('ytp'+lid,{videoId:L.yt,width:'100%',height:'100%',playerVars:{rel:0,modestbranding:1},events:{onStateChange:(e)=>onYTState(lid,e)}});
+    YTTimer=setInterval(()=>pollYT(lid),600);
+  });
+}
+function onYTState(lid,e){
+  if(YTPlayer&&e.data===YT.PlayerState.ENDED){
+    const s=stage(lid);
+    for(let i=0;i<2;i++){if(!s.wq[i]){askWatch(lid,i);break;}}
+  }
+}
+function pollYT(lid){
+  if(!YTPlayer||YTCur!==lid)return;
+  const s=stage(lid);let dur=0,t=0;
+  try{dur=YTPlayer.getDuration();t=YTPlayer.getCurrentTime();}catch(e){return;}
+  if(!dur||dur===Infinity)return;
+  for(let i=0;i<2;i++){
+    if(!s.wq[i]&&t>=dur*(i===0?0.34:0.67)){askWatch(lid,i);break;}
+  }
+}
+function askWatch(lid,i){
+  const L=LEVELS[lid-1],s=stage(lid),q=L.wq[i];
+  if(s.wq[i])return;
+  if(YTPlayer&&YTCur===lid){try{YTPlayer.pauseVideo();}catch(e){}}
+  const ov=document.getElementById('wqo'+lid);
+  if(!ov){renderStaticWQ(lid);return;}
+  const opts=shuffle(q[1].map((t,oi)=>({t,oi})));
+  ov.innerHTML='<h4>⏸ Quick check-in — answer to keep watching</h4><div style="font-size:1.05rem;margin-bottom:10px">'+q[0]+'</div><div class="qopts">'+opts.map(o=>'<button class="qopt" onclick="ansWatchQ(this,'+lid+','+i+','+o.oi+')">'+o.t+'</button>').join('')+'</div><div class="qwhy" id="wqwhy'+lid+'" style="display:none"></div><div id="wqcont'+lid+'" style="margin-top:10px"></div>';
+  ov.style.display='flex';
+}
+function ansWatchQ(btn,lid,i,oi){
+  const L=LEVELS[lid-1],s=stage(lid),q=L.wq[i];
+  const btns=btn.parentElement.querySelectorAll('.qopt');
+  btns.forEach(b=>{b.disabled=true;if(b.textContent===q[1][q[2]])b.classList.add('right');});
+  if(oi!==q[2])btn.classList.add('wrong');
+  const why=document.getElementById('wqwhy'+lid);why.style.display='block';why.innerHTML='<b>Why:</b> '+q[3];
+  document.getElementById('wqcont'+lid).innerHTML='<button class="bigbtn" onclick="contWatch('+lid+','+i+')">Keep watching ▶</button>';
+  s.wq[i]=true;save();renderCheckpoints(lid);refreshPills(lid);
+}
+function contWatch(lid,i){
+  const ov=document.getElementById('wqo'+lid);if(ov)ov.style.display='none';
+  const s=stage(lid);
+  if(s.wq[0]&&s.wq[1]){render();return;}
+  if(YTPlayer&&YTCur===lid){try{YTPlayer.playVideo();}catch(e){}}
+}
+
+/* ---------- quizzes A & B ---------- */
+function showQuiz(lid,ab){
+  const L=LEVELS[lid-1],s=stage(lid);
+  if(!s.qo){s.qo=shuffle([0,1,2,3,4,5]);save();}
+  const idx=s.qo.slice(ab==='a'?0:3,ab==='a'?3:6);
+  const qs=idx.map(k=>L.qs[k]);
+  const box=document.getElementById('qz'+ab+lid);
+  let qi=0,score=0;
+  function ask(){
+    if(qi>=3){
+      const pass=score>=NEED;
+      if(pass){
+        if(ab==='a')s.qa=true;else s.qb=true;
+        if(levelComplete(lid)&&state.done<lid)state.done=lid;
+        save();
+        box.innerHTML='<p class="statline">🌻 '+(ab==='a'?'Quiz A':'Quiz B')+' passed ('+score+'/3)!'+(levelComplete(lid)?' <b>Expedition cleared — your garden grew.</b>':'')+'</p><button class="ghostbtn" onclick="showQuiz('+lid+',\''+ab+'\')">Replay</button>';
+        setTimeout(render,1200);
+      }else{
+        box.innerHTML='<p class="statline">You got '+score+'/3 — need 2 to pass. Hit replay and go again.</p><button class="bigbtn" onclick="showQuiz('+lid+',\''+ab+'\')">Replay Quiz '+ab.toUpperCase()+'</button>';
+      }
+      return;
+    }
+    const q=qs[qi],opts=shuffle(q[1].map((t,oi)=>({t,oi})));
+    box.innerHTML='<div class="qblock"><h5>Question '+(qi+1)+' of 3</h5><div style="margin-bottom:8px">'+q[0]+'</div><div class="qopts">'+opts.map(o=>'<button class="qopt" onclick="ansQuiz(this,'+o.oi+')">'+o.t+'</button>').join('')+'</div><div class="qwhy" id="qwhy" style="display:none"></div><div id="qnext"></div></div>';
+    window._ansQ=function(btn,oi){
+      const bts=btn.parentElement.querySelectorAll('.qopt');
+      bts.forEach(b=>{b.disabled=true;if(b.textContent===q[1][q[2]])b.classList.add('right');});
+      const ok=oi===q[2];if(ok)score++;else btn.classList.add('wrong');
+      const why=document.getElementById('qwhy');why.style.display='block';why.innerHTML='<b>Why:</b> '+q[3];
+      document.getElementById('qnext').innerHTML='<button class="bigbtn" onclick="_nextQ()">'+(qi===2?'See results':'Next →')+'</button>';
+    };
+    window._nextQ=function(){qi++;ask();};
+  }
+  window.ansQuiz=function(btn,oi){window._ansQ(btn,oi);};
+  ask();
+}
+
+/* ---------- init ---------- */
+render();
+if(!player)showWho();
+
+</script>
+</body>
+</html>
